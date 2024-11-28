@@ -5,6 +5,8 @@ import json # JSON-muunnokset
 from PySide6 import QtWidgets # Qt-vimpaimet
 from Autolainaus_settings import Ui_MainWindow # Käännetyn käyttöliittymän luokka
 
+import cipher # DIY moduuli salukseen, käyttää Fernet-salausta
+
 # Määritellään luokka, joka perii QMainWindow-ja Ui_MainWindow-luokan
 class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 
@@ -17,6 +19,12 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 
         # Kutsutaan käyttöliittymän muodostusmetodia setupUi
         self.ui.setupUi(self)
+
+        # Salausavain luottamuksellisten asetusten kryptaamiseen
+        # Avainta ei saa vaihtaa ohjelman käyttöönoton jälkeen!
+        # Avain on luotu cipher.py
+        self.secretKey = b'N4c4aAnEyqjpvIzXD9wZ7doo5V6WOUGi7xvyxBq3gSA='
+        self.cryptoEngine = cipher.createChipher(self.secretKey)
 
         # Luetaan asetustietosto Python-sanakirjaksi
         self.currentSettings = {}
@@ -45,7 +53,11 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         userName = self.ui.KayttajatunnusLineEdit.text()
         password = self.ui.passwordLineEdit.text()
 
-        # Lisää tähän salasanan kryptaus
+        # Muutetaan merkkijono tavumuotoon (byte, merkisö UTF-8)
+        plainTextPassword = bytes(self.ui.passwordLineEdit.text(), 'utf-8')
+
+        # Salataan ja muunnetaan tavalliseksi merkkijonoksi, jotta JSON-tallennus onnistuu
+        encryptedPassword = str(cipher.encrypt(self.cryptoEngine, plainTextPassword))
 
         # Muodostetaan muuttujista Python-sanakirja
         settingsDictionary = {
@@ -53,7 +65,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
             'port': port,
             'database': database,
             'userName': userName,
-            'password': password
+            'password': encryptedPassword
         }
 
         # Muunnetaan sanakirja JSON-muotoon
