@@ -1,7 +1,1 @@
-{
-"Palevelin": "127.0.0.1",
-"Portti": "5432",
-"Käyttäjätunnus": "Sandrowue",
-"Salasana": "helenium",
-"Tietokanta": "Autolainaus"
-}
+{"server": "12334", "port": "4455", "database": "auto", "userName": "sandrowue", "password": "dddfggrgr"}
