@@ -51,7 +51,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         port = self.ui.porttiLineEdit.text()
         database = self.ui.tietokantaLineEdit.text() 
         userName = self.ui.KayttajatunnusLineEdit.text()
-        password = self.ui.passwordLineEdit.text()
+        
 
         # Muutetaan merkkijono tavumuotoon (byte, merkisö UTF-8)
         plainTextPassword = bytes(self.ui.passwordLineEdit.text(), 'utf-8')
