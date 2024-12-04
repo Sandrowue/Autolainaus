@@ -1,10 +1,13 @@
 import os # Polkumääritykset
 import sys # Käynnistysargumentit
 import json 
+import dbOperations
 
 from PySide6 import QtWidgets
 from Autolainaus import Ui_MainWindow
-from Settings_dialog import Ui_Dialog
+from Settings_dialog import Ui_Dialog as Settings_Dialog
+from About_dialog import Ui_Dialog as About_Dialog
+
 
 import cipher
 
@@ -18,26 +21,38 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         # Kutsutaan käyttöliittymän muodostusmetodia setupUi
         self.ui.setupUi(self)
 
+        # Rutiini, joka lukee asetukset, jos ne ovat olemassa
+        try:
+            with open('settings.json', 'rt') as settingsFile:
+                self.currentSettings = json.load(settingsFile)
+                
+        except Exception as e:
+            self.openSettingsDialog()
+
         # Ohjelmoidut signaalit
         # Asetukset-valikon muokkaa toiminto avaa Asetukset-dialogi-ikkunan
         self.ui.actionMuokkaa.triggered.connect(self.openSettingsDialog)
+        self.ui.actionTietoja_ohjelmasta.triggered.connect(self.openAboutDialog)
 
     # Ohjelmoidut Slotit
+    # Dialogien avausmetodit
     def openSettingsDialog(self):
         self.saveSettingsDialog = SaveSettingsDialog()
         self.saveSettingsDialog.setWindowTitle('Palvelinasetukset')
         self.saveSettingsDialog.exec()
 
+    def openAboutDialog(self):
+        self. aboutDialog = AboutWindow()
+        self.aboutDialog.setWindowTitle('Tietoja ohjelmasta')
+        self.aboutDialog.exec()
+
     # Asetusten tallennusikkunan luokka
-class SaveSettingsDialog(QtWidgets.QDialog, Ui_Dialog):
+class SaveSettingsDialog(QtWidgets.QDialog, Settings_Dialog):
     def __init__(self):
         super().__init__()
 
-        self.ui = Ui_Dialog()
+        self.ui = Settings_Dialog()
         self.ui.setupUi(self)
-
-        self.secretKey = b'N4c4aAnEyqjpvIzXD9wZ7doo5V6WOUGi7xvyxBq3gSA='
-        self.cryptoEngine = cipher.createChipher(self.secretKey)
 
         self.currentSettings = {}
         try:
@@ -68,7 +83,7 @@ class SaveSettingsDialog(QtWidgets.QDialog, Ui_Dialog):
         plainTextPassword = bytes(self.ui.passwordLineEdit.text(), 'utf-8')
 
         # Salataan ja muunnetaan tavalliseksi merkkijonoksi, jotta JSON-tallennus onnistuu
-        encryptedPassword = str(cipher.encrypt(self.cryptoEngine, plainTextPassword))
+        encryptedPassword = cipher.encryptString(plainTextPassword)
 
         # Muodostetaan muuttujista Python-sanakirja
         settingsDictionary = {
@@ -94,6 +109,14 @@ class SaveSettingsDialog(QtWidgets.QDialog, Ui_Dialog):
         msgBox.setText('settings.json tiedosto puuttuu!')
         msgBox.setStandardButtons(QtWidgets.QMessageBox.Ok)
         msgBox.exec()
+
+class AboutWindow(QtWidgets.QDialog, About_Dialog):
+    def __init__(self):
+        super().__init__()
+        
+        self.ui = About_Dialog()
+
+        self.ui.setupUi(self)
 
 if __name__ == "__main__":
     # Luodaan sovellus ja setetaan tyyliksi Fusion
