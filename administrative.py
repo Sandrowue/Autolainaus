@@ -25,9 +25,17 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         try:
             with open('settings.json', 'rt') as settingsFile:
                 self.currentSettings = json.load(settingsFile)
+
+                encryptedPassword = self.currentSettings['password']
+                print('Tietokannan salattu salasana: ', encryptedPassword)
+                
+                plainPassword = cipher.decryptString(encryptedPassword)
+                print('Selväkielinen salasana on', plainPassword)
                 
         except Exception as e:
             self.openSettingsDialog()
+            
+            
 
         # Ohjelmoidut signaalit
         # Asetukset-valikon muokkaa toiminto avaa Asetukset-dialogi-ikkunan
@@ -55,6 +63,8 @@ class SaveSettingsDialog(QtWidgets.QDialog, Settings_Dialog):
         self.ui.setupUi(self)
 
         self.currentSettings = {}
+        
+        
         try:
             with open('settings.json', 'rt') as settingsFile:
                 jsonData = settingsFile.read()
@@ -64,23 +74,35 @@ class SaveSettingsDialog(QtWidgets.QDialog, Settings_Dialog):
             self.ui.porttiLineEdit.setText(self.currentSettings['port'])
             self.ui.tietokantaLineEdit.setText(self.currentSettings['database'])
             self.ui.KayttajatunnusLineEdit.setText(self.currentSettings['userName'])
-            self.ui.passwordLineEdit.setText(self.currentSettings['password'])
+            self.ui.vanhaSalasanaLineEdit.setText(self.currentSettings['password'])
+            
+
+            self.ui.vaihdaSalasanapushButton.setEnabled(False)
+            self.ui.tallennaPushButton.clicked.connect(self.saveUserToJsonFile)
+            self.ui.uusiSalasanaLineEdit.textEdited.connect(self.ui.vaihdaSalasanapushButton.setEnabled(True))
+            self.ui.vaihdaSalasanapushButton.clicked.connect(self.savePasswordToJsonFile)
+        
         except Exception as e:
             self.openInfo()
+            
+            self.ui.tallennaPushButton.clicked.connect(self.saveAllToJsonFile)
 
-        self.ui.tallennaPushButton.clicked.connect(self.saveToJsonFile)
+            self.ui.vanhaSalasanaLineEdit.setEnabled(False)
+            self.ui.vaihdaSalasanapushButton.setEnabled(False)
 
-    def saveToJsonFile(self):
+ 
+
+    def saveAllToJsonFile(self):
 
         # Luetaan käyttöliittymästä tiedot paikallisiin muuttujiin
         server = self.ui.palvelinLineEdit.text()
         port = self.ui.porttiLineEdit.text()
         database = self.ui.tietokantaLineEdit.text() 
         userName = self.ui.KayttajatunnusLineEdit.text()
-        password = self.ui.passwordLineEdit.text()
+        newPassword = self.ui.uusiSalasanaLineEdit.text()
 
         # Muutetaan merkkijono tavumuotoon (byte, merkisö UTF-8)
-        plainTextPassword = bytes(self.ui.passwordLineEdit.text(), 'utf-8')
+        plainTextPassword = newPassword
 
         # Salataan ja muunnetaan tavalliseksi merkkijonoksi, jotta JSON-tallennus onnistuu
         encryptedPassword = cipher.encryptString(plainTextPassword)
@@ -100,6 +122,62 @@ class SaveSettingsDialog(QtWidgets.QDialog, Settings_Dialog):
         # Avataan asetustiedosto ja korjataan asetukset
         with open('settings.json', 'wt') as settingsFile:
             settingsFile.write(jsonData)
+
+
+    def saveUserToJsonFile(self):
+
+        # Luetaan käyttöliittymästä tiedot paikallisiin muuttujiin
+        server = self.ui.palvelinLineEdit.text()
+        port = self.ui.porttiLineEdit.text()
+        database = self.ui.tietokantaLineEdit.text() 
+        userName = self.ui.KayttajatunnusLineEdit.text()
+        
+        
+        
+        # Muodostetaan muuttujista Python-sanakirja
+        settingsDictionary = {
+            'server': server,
+            'port': port,
+            'database': database,
+            'userName': userName, 
+            'password': self.currentSettings['password']    
+        }
+
+        # Muunnetaan sanakirja JSON-muotoon
+        jsonData = json.dumps(settingsDictionary)
+
+        # Avataan asetustiedosto ja korjataan asetukse
+
+        with open('settings.json', 'wt') as settingsFile:
+            settingsFile.write(jsonData)
+        
+            
+    def savePasswordToJsonFile(self):
+
+        # Luetaan käyttöliittymästä tiedot paikallisiin muuttujiin
+        newPassword = self.ui.uusiSalasanaLineEdit.text()
+
+        # Muutetaan merkkijono tavumuotoon (byte, merkisö UTF-8)
+        plainTextPassword = newPassword
+
+        # Salataan ja muunnetaan tavalliseksi merkkijonoksi, jotta JSON-tallennus onnistuu
+        encryptedPassword = cipher.encryptString(plainTextPassword)
+
+        # Muodostetaan muuttujista Python-sanakirja
+        settingsDictionary = {
+            'server': self.currentSettings['server'],
+            'port': self.currentSettings['port'],
+            'database': self.currentSettings['database'],
+            'userName': self.currentSettings['userName'],
+            'password': encryptedPassword
+        }
+
+        # Muunnetaan sanakirja JSON-muotoon
+        jsonData = json.dumps(settingsDictionary)
+
+        # Avataan asetustiedosto ja korjataan asetukset
+        with open('settings.json', 'wt') as settingsFile:
+            settingsFile.write(jsonData)               
 
     # Avataan Message Box
     def openInfo(self):
