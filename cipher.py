@@ -1,33 +1,33 @@
 from cryptography.fernet import Fernet
 
-def newKey() -> str:
+def newKey() -> bytes:
     key = Fernet.generate_key()
     return key
 
-def createChipher(key: str) -> object:
+def createChipher(key: bytes) -> object:
     cipher = Fernet(key)
     return cipher
 
-def encrypt(cipher: object, plainText: str) -> str:
+def encrypt(cipher: object, plainText: bytes) -> bytes:
     cryptoText = cipher.encrypt(plainText)
     return cryptoText
 
-def decrypt(cipher: object, cryptoText: str, byteMode=False) -> str:
+def decrypt(cipher: object, cryptoText: str | bytes, byteMode=False) -> str | bytes:
     if byteMode == True:
         plainText = cipher.decrypt(cryptoText)
     else:
         plainText = cipher.decrypt(cryptoText).decode()
     return plainText
 
-def encryptString(plainText: str, key=b'N4c4aAnEyqjpvIzXD9wZ7doo5V6WOUGi7xvyxBq3gSA=') -> bytes:
+def encryptString(plainText: str, key=b'N4c4aAnEyqjpvIzXD9wZ7doo5V6WOUGi7xvyxBq3gSA=') -> str:
     cihperEngine = createChipher(key)
-    byteForm = bytes(plainText, 'utf-8')
-    cryptoText = encrypt(cihperEngine, byteForm)
+    byteForm = plainText.encode()
+    cryptoText = encrypt(cihperEngine, byteForm).decode()
     return cryptoText
 
-def decryptString(cryptoText: bytes, key=b'N4c4aAnEyqjpvIzXD9wZ7doo5V6WOUGi7xvyxBq3gSA=') -> str:
+def decryptString(cryptoText: str | bytes, key=b'N4c4aAnEyqjpvIzXD9wZ7doo5V6WOUGi7xvyxBq3gSA=') -> str:
     cipherEnginge = createChipher(key)
-    plainText = str(decrypt(cipherEnginge, cryptoText))
+    plainText = decrypt(cipherEnginge, cryptoText)
     return plainText
 
 if __name__ == "__main__":
