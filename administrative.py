@@ -38,11 +38,19 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
             
 
         # Ohjelmoidut signaalit
-        # Asetukset-valikon muokkaa toiminto avaa Asetukset-dialogi-ikkunan
+        # Valikkotoiminnot
         self.ui.actionMuokkaa.triggered.connect(self.openSettingsDialog)
         self.ui.actionTietoja_ohjelmasta.triggered.connect(self.openAboutDialog)
 
+        # Painikkeet
+        self.ui.tallennaRyhmatPushButton.clicked.connect(self.saveGroup)
+        self.ui.tallennaLainaajatPushButton.clicked.connect(self.savePerson)
+        self.ui.tallennaAutotPushButton.clicked.connect(self.saveCar)
+
     # Ohjelmoidut Slotit
+
+    # Valikkotoimintojen slotit
+
     # Dialogien avausmetodit
     def openSettingsDialog(self):
         self.saveSettingsDialog = SaveSettingsDialog()
@@ -53,6 +61,93 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self. aboutDialog = AboutWindow()
         self.aboutDialog.setWindowTitle('Tietoja ohjelmasta')
         self.aboutDialog.exec()
+
+    # PAINIKKEIDEN SLOTIT
+    # Ryhmän tallennus
+
+    def saveCar(self):
+        dbSettings = self.currentSettings
+        tableName = 'auto'
+
+        rekisterinumero = self.ui.rekisterinumeroLineEdit.text()
+        malli = self.ui.malliLineEdit.text()
+        merkki = self.ui.merkkiLineEdit.text()
+        vuosimalli = self.ui.vuosimalliLineEdit.text()
+        henkilomaara = self.ui.henkilomaaraLineEdit.text()
+
+        groupDictionary = {
+            'rekisterinumero': rekisterinumero,
+            'malli': malli,
+            'merkki': merkki,
+            'vuosimalli': vuosimalli,
+            'henkilomaara': henkilomaara
+        }
+
+        dbConnection = dbOperations.DbConnection(dbSettings)
+
+        try:
+            dbConnection.addToTable(tableName, groupDictionary)
+        except Exception as e:
+            print('Virheilmoitus', str(e))
+            self.openWarning('Virhe!', f'Toiminto keskeytyi! {e}')
+
+    def savePerson(self):
+        dbSettings = self.currentSettings
+        tableName = 'lainaaja'
+        
+        hetu = self.ui.henkilotunnusLineEdit.text()
+        etunimi = self.ui.etunimiLineEdit.text()
+        sukunimi = self.ui.sukunimiLineEdit.text()
+        # ryhma = self.ui.ryhmaComboBox.currentText()
+        ajokortti = self.ui.ajoneuvoluokkaLineEdit.text()
+        sahkoposti = self.ui.sahkopostiLineEdit.text()
+
+        groupDictionary = {
+            'hetu': hetu,
+            'etunimi': etunimi,
+            'sukunimi': sukunimi,
+            'ryhma': 'Mopo Jopoli',
+            'ajokorttiluokka': ajokortti,
+            'sahkoposti': sahkoposti
+        }
+
+        dbConnection = dbOperations.DbConnection(dbSettings)
+
+        try:
+            dbConnection.addToTable(tableName, groupDictionary)
+        except Exception as e:
+            print('Virheilmoitus', str(e))
+            self.openWarning('Virhe!', f'Toiminto keskeytyi! {e}')
+
+    def saveGroup(self):
+        # Määritellään tietokanta-asetukset
+        dbSettings = self.currentSettings
+        print('Tiedokannan asetukset on:', dbSettings)
+        # Määritellään tallennusmetodin vaatimat parametrit
+        tableName = 'ryhma'
+
+        group = self.ui.ryhmaLineEdit_2.text()
+        responsiblePerson = self.ui.vastuuhenkiloLineEdit.text()
+        groupDictionary  = {'ryhma': group,
+                            'vastuuhenkilo': responsiblePerson}
+        
+        # Luodaan tietokantayhteys-olio
+        dbConnection = dbOperations.DbConnection(dbSettings)
+
+        # Kutsutaan tallennusmetodia
+        try:
+            dbConnection.addToTable(tableName, groupDictionary)
+        except Exception as e:
+            print('Virheilmoitus', str(e))
+            self.openWarning('Virhe!', f'Toiminto keskeytyi! {e}')
+
+    def openWarning(self, title: str, text: str) -> None:
+        msgBox = QtWidgets.QMessageBox()
+        msgBox.setIcon(QtWidgets.QMessageBox.Critical)
+        msgBox.setWindowTitle(title)
+        msgBox.setText(text)
+        msgBox.setStandardButtons(QtWidgets.QMessageBox.Ok)
+        msgBox.exec()
 
     # Asetusten tallennusikkunan luokka
 class SaveSettingsDialog(QtWidgets.QDialog, Settings_Dialog):
@@ -74,12 +169,10 @@ class SaveSettingsDialog(QtWidgets.QDialog, Settings_Dialog):
             self.ui.porttiLineEdit.setText(self.currentSettings['port'])
             self.ui.tietokantaLineEdit.setText(self.currentSettings['database'])
             self.ui.KayttajatunnusLineEdit.setText(self.currentSettings['userName'])
-            self.ui.vanhaSalasanaLineEdit.setText(self.currentSettings['password'])
             
-
             self.ui.vaihdaSalasanapushButton.setEnabled(False)
             self.ui.tallennaPushButton.clicked.connect(self.saveUserToJsonFile)
-            self.ui.uusiSalasanaLineEdit.textEdited.connect(self.ui.vaihdaSalasanapushButton.setEnabled(True))
+            self.ui.uusiSalasanaLineEdit.textEdited.connect(self.enableVaihdaSalasana)
             self.ui.vaihdaSalasanapushButton.clicked.connect(self.savePasswordToJsonFile)
         
         except Exception as e:
@@ -90,7 +183,9 @@ class SaveSettingsDialog(QtWidgets.QDialog, Settings_Dialog):
             self.ui.vanhaSalasanaLineEdit.setEnabled(False)
             self.ui.vaihdaSalasanapushButton.setEnabled(False)
 
- 
+    def enableVaihdaSalasana(self):
+        if self.ui.vanhaSalasanaLineEdit.text() == self.currentSettings['password']:
+            self.ui.vaihdaSalasanapushButton.setEnabled(True)
 
     def saveAllToJsonFile(self):
 
@@ -101,11 +196,8 @@ class SaveSettingsDialog(QtWidgets.QDialog, Settings_Dialog):
         userName = self.ui.KayttajatunnusLineEdit.text()
         newPassword = self.ui.uusiSalasanaLineEdit.text()
 
-        # Muutetaan merkkijono tavumuotoon (byte, merkisö UTF-8)
-        plainTextPassword = newPassword
-
         # Salataan ja muunnetaan tavalliseksi merkkijonoksi, jotta JSON-tallennus onnistuu
-        encryptedPassword = cipher.encryptString(plainTextPassword)
+        encryptedPassword = cipher.encryptString(newPassword)
 
         # Muodostetaan muuttujista Python-sanakirja
         settingsDictionary = {
@@ -113,7 +205,7 @@ class SaveSettingsDialog(QtWidgets.QDialog, Settings_Dialog):
             'port': port,
             'database': database,
             'userName': userName,
-            'password': encryptedPassword
+            'password': newPassword
         }
 
         # Muunnetaan sanakirja JSON-muotoon
@@ -126,11 +218,16 @@ class SaveSettingsDialog(QtWidgets.QDialog, Settings_Dialog):
 
     def saveUserToJsonFile(self):
 
+        with open('settings.json', 'rt') as settingsFile:
+                jsonData = settingsFile.read()
+                actualSettings = json.loads(jsonData)
+
         # Luetaan käyttöliittymästä tiedot paikallisiin muuttujiin
         server = self.ui.palvelinLineEdit.text()
         port = self.ui.porttiLineEdit.text()
         database = self.ui.tietokantaLineEdit.text() 
         userName = self.ui.KayttajatunnusLineEdit.text()
+        password = actualSettings['password']
         
         
         
@@ -140,7 +237,7 @@ class SaveSettingsDialog(QtWidgets.QDialog, Settings_Dialog):
             'port': port,
             'database': database,
             'userName': userName, 
-            'password': self.currentSettings['password']    
+            'password': password
         }
 
         # Muunnetaan sanakirja JSON-muotoon
@@ -154,22 +251,23 @@ class SaveSettingsDialog(QtWidgets.QDialog, Settings_Dialog):
             
     def savePasswordToJsonFile(self):
 
+        with open('settings.json', 'rt') as settingsFile:
+                jsonData = settingsFile.read()
+                actualSettings = json.loads(jsonData)
+
         # Luetaan käyttöliittymästä tiedot paikallisiin muuttujiin
         newPassword = self.ui.uusiSalasanaLineEdit.text()
 
-        # Muutetaan merkkijono tavumuotoon (byte, merkisö UTF-8)
-        plainTextPassword = newPassword
-
         # Salataan ja muunnetaan tavalliseksi merkkijonoksi, jotta JSON-tallennus onnistuu
-        encryptedPassword = cipher.encryptString(plainTextPassword)
+        encryptedPassword = cipher.encryptString(newPassword)
 
         # Muodostetaan muuttujista Python-sanakirja
         settingsDictionary = {
-            'server': self.currentSettings['server'],
-            'port': self.currentSettings['port'],
-            'database': self.currentSettings['database'],
-            'userName': self.currentSettings['userName'],
-            'password': encryptedPassword
+            'server': actualSettings['server'],
+            'port': actualSettings['port'],
+            'database': actualSettings['database'],
+            'userName': actualSettings['userName'],
+            'password': newPassword
         }
 
         # Muunnetaan sanakirja JSON-muotoon
