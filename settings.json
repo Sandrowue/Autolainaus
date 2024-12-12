@@ -1,1 +1,1 @@
-{"server": "local", "port": "1456", "database": "raseko", "userName": "werner", "password": "gAAAAABnUa6etPjIZ7P_tLZ3ato-h2VzR59-4MHCArasQGvjfIjLrlwu2qbY2vhqi_i9XuXzxzZcZWxrLGg8r5KchlhpliwrWg=="}
+{"server": "127.0.0.1", "port": "5432", "database": "autolainaus", "userName": "autolainaus", "password": "helenium"}
