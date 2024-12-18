@@ -25,7 +25,7 @@ class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         if not MainWindow.objectName():
             MainWindow.setObjectName(u"MainWindow")
-        MainWindow.resize(889, 642)
+        MainWindow.resize(888, 642)
         self.actionMuokkaa = QAction(MainWindow)
         self.actionMuokkaa.setObjectName(u"actionMuokkaa")
         self.actionTietoja_ohjelmasta = QAction(MainWindow)
@@ -80,8 +80,14 @@ class Ui_MainWindow(object):
         self.lainaajatLabel.setGeometry(QRect(30, 310, 200, 25))
         self.lainaajatLabel.setFont(font)
         self.lainaajatTableWidget = QTableWidget(self.lainaajat)
+        if (self.lainaajatTableWidget.columnCount() < 6):
+            self.lainaajatTableWidget.setColumnCount(6)
+        if (self.lainaajatTableWidget.rowCount() < 7):
+            self.lainaajatTableWidget.setRowCount(7)
         self.lainaajatTableWidget.setObjectName(u"lainaajatTableWidget")
-        self.lainaajatTableWidget.setGeometry(QRect(30, 341, 600, 225))
+        self.lainaajatTableWidget.setGeometry(QRect(30, 341, 630, 225))
+        self.lainaajatTableWidget.setRowCount(7)
+        self.lainaajatTableWidget.setColumnCount(6)
         self.tallennaLainaajatPushButton = QPushButton(self.lainaajat)
         self.tallennaLainaajatPushButton.setObjectName(u"tallennaLainaajatPushButton")
         self.tallennaLainaajatPushButton.setGeometry(QRect(460, 210, 100, 30))
@@ -128,8 +134,14 @@ class Ui_MainWindow(object):
         self.autoluetteloLabel.setGeometry(QRect(30, 280, 150, 25))
         self.autoluetteloLabel.setFont(font)
         self.autoluetteloTableWidget = QTableWidget(self.autot)
+        if (self.autoluetteloTableWidget.columnCount() < 5):
+            self.autoluetteloTableWidget.setColumnCount(5)
+        if (self.autoluetteloTableWidget.rowCount() < 8):
+            self.autoluetteloTableWidget.setRowCount(8)
         self.autoluetteloTableWidget.setObjectName(u"autoluetteloTableWidget")
-        self.autoluetteloTableWidget.setGeometry(QRect(30, 310, 600, 225))
+        self.autoluetteloTableWidget.setGeometry(QRect(30, 310, 530, 250))
+        self.autoluetteloTableWidget.setRowCount(8)
+        self.autoluetteloTableWidget.setColumnCount(5)
         self.merkkiLineEdit = QLineEdit(self.autot)
         self.merkkiLineEdit.setObjectName(u"merkkiLineEdit")
         self.merkkiLineEdit.setGeometry(QRect(200, 20, 150, 25))
@@ -174,11 +186,11 @@ class Ui_MainWindow(object):
         self.ryhmatTableWidget = QTableWidget(self.ryhmat)
         if (self.ryhmatTableWidget.columnCount() < 2):
             self.ryhmatTableWidget.setColumnCount(2)
-        if (self.ryhmatTableWidget.rowCount() < 7):
-            self.ryhmatTableWidget.setRowCount(7)
+        if (self.ryhmatTableWidget.rowCount() < 11):
+            self.ryhmatTableWidget.setRowCount(11)
         self.ryhmatTableWidget.setObjectName(u"ryhmatTableWidget")
-        self.ryhmatTableWidget.setGeometry(QRect(30, 180, 600, 225))
-        self.ryhmatTableWidget.setRowCount(7)
+        self.ryhmatTableWidget.setGeometry(QRect(30, 180, 240, 350))
+        self.ryhmatTableWidget.setRowCount(11)
         self.ryhmatTableWidget.setColumnCount(2)
         self.ryhmat_label = QLabel(self.ryhmat)
         self.ryhmat_label.setObjectName(u"ryhmat_label")
@@ -197,7 +209,7 @@ class Ui_MainWindow(object):
         self.raporttiComboBox.setFont(font)
         self.esikatseluTableWidget = QTableWidget(self.raportit)
         self.esikatseluTableWidget.setObjectName(u"esikatseluTableWidget")
-        self.esikatseluTableWidget.setGeometry(QRect(30, 280, 600, 225))
+        self.esikatseluTableWidget.setGeometry(QRect(30, 280, 600, 275))
         self.alkaaLabel = QLabel(self.raportit)
         self.alkaaLabel.setObjectName(u"alkaaLabel")
         self.alkaaLabel.setGeometry(QRect(30, 140, 150, 25))
@@ -232,7 +244,7 @@ class Ui_MainWindow(object):
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QMenuBar(MainWindow)
         self.menubar.setObjectName(u"menubar")
-        self.menubar.setGeometry(QRect(0, 0, 889, 21))
+        self.menubar.setGeometry(QRect(0, 0, 888, 21))
         self.menuAsetukset = QMenu(self.menubar)
         self.menuAsetukset.setObjectName(u"menuAsetukset")
         MainWindow.setMenuBar(self.menubar)
@@ -246,7 +258,7 @@ class Ui_MainWindow(object):
 
         self.retranslateUi(MainWindow)
 
-        self.tabWidget.setCurrentIndex(0)
+        self.tabWidget.setCurrentIndex(2)
 
 
         QMetaObject.connectSlotsByName(MainWindow)

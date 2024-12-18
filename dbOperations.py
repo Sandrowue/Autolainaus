@@ -17,11 +17,10 @@ class DbConnection():
         
         # Yhteysmerkkijono
         self.connectionString = f'dbname={self.databaseName} user={self.userName} password={self.password} host={self.server} port={self.port}'
-        print('Yhteysmerkkijono on:', self.connectionString)
+        
 
     # Metodi tietojen lisäämiseen (INSERT)
     def addToTable(self, table: str, data: dict) -> str:
-        message = ""
 
         # Muodostetaan lista sarakkeiden (kenttien) nimistä ja arvoista SQL lausetta varten
         keys = data.keys() # Luetaan sanakirjan avaimet
@@ -69,14 +68,68 @@ class DbConnection():
                 cursor.close() # Tuhotaan kursori
                 currentConnection.close() # Tuhotaan yhteys
 
+    def readAllColumnsFromTable(self, table: str) -> list:
+        records = []
+        try:
+            # Luodaan yhteys tietokantaan
+            currentConnection = psycopg2.connect(self.connectionString)
+
+            # Luodaan kursori suorittamaan tietokantaoperaatiota
+            cursor = currentConnection.cursor()
+
+            sqlClause = f'SELECT * FROM {table}'
+            # Suoritetaan SQL-lause
+            cursor.execute(sqlClause)
+            records = cursor.fetchall()
+            return records
+
+        except(Exception, psycopg2.Error) as e:
+            raise e
         
+        finally:
+            # Selvitetään muodostuiko yhteysolio
+            if currentConnection:
+                cursor.close() # Tuhotaan kursori
+                currentConnection.close() # Tuhotaan yhteys
+
+
+    def readChosenColumnFormTable(self, table, columns):
+        records = []
+        try:
+            # Luodaan yhteys tietokantaan
+            currentConnection = psycopg2.connect(self.connectionString)
+
+            # Luodaan kursori suorittamaan tietokantaoperaatiota
+            cursor = currentConnection.cursor()
+
+            sqlClause = f'SELECT {columns} FROM {table}'
+            
+            # Suoritetaan SQL-lause
+            cursor.execute(sqlClause)
+            records = cursor.fetchall()
+
+        except(Exception, psycopg2.Error) as e:
+            raise e
+        
+        finally:
+            # Selvitetään muodostuiko yhteysolio
+            if currentConnection:
+                cursor.close() # Tuhotaan kursori
+                currentConnection.close() # Tuhotaan yhteys
+
+        return records
+
 if __name__ == '__main__':
 
     testiasetukset = {"server": "127.0.0.1", "port": "5432", "database": "autolainaus", "userName": "autolainaus", "password": "helenium"}
-   
-    testidata = {'ryhma': 'Mopo Jopo',
-                 'vastuuhenkilo': 'Hannu'}
-
     dbConnection = DbConnection(testiasetukset)
-    dbConnection.addToTable('ryhma', testidata)
+   
+    """ testidata = {'ryhma': 'Mopo Jopo',
+                 'vastuuhenkilo': 'Hannu'}
+    dbConnection.addToTable('ryhma', testidata) """
+
+    taulukonSisältö = dbConnection.readAllColumnsFromTable('lainaaja')
+    valitutKolumnit = dbConnection.readChosenColumnFormTable('lainaaja', 'sukunimi')
+    print(taulukonSisältö)
+    # print(valitutKolumnit)
 

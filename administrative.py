@@ -3,6 +3,7 @@ import sys # Käynnistysargumentit
 import json 
 import dbOperations
 
+
 from PySide6 import QtWidgets
 from Autolainaus import Ui_MainWindow
 from Settings_dialog import Ui_Dialog as Settings_Dialog
@@ -24,7 +25,9 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         # Rutiini, joka lukee asetukset, jos ne ovat olemassa
         try:
             with open('settings.json', 'rt') as settingsFile:
-                self.currentSettings = json.load(settingsFile)
+                jsonData = settingsFile.read()
+                self.currentSettings = json.loads(jsonData)
+                print(self.currentSettings)
 
                 encryptedPassword = self.currentSettings['password']
                 print('Tietokannan salattu salasana: ', encryptedPassword)
@@ -32,22 +35,30 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
                 plainPassword = cipher.decryptString(encryptedPassword)
                 print('Selväkielinen salasana on', plainPassword)
                 
-        except Exception as e:
-            self.openSettingsDialog()
-            
+            # Päivitetään yhdistelmäruutjen arvot ohjelman käynnistyksen yhteydessä
             
 
-        # Ohjelmoidut signaalit
+        except Exception as e:
+            print(str(e))
+            self.openSettingsDialog()
+            
+        self.refreshUi()
+
+        # OHJELMOIDUT SIGNAALIT
         # Valikkotoiminnot
         self.ui.actionMuokkaa.triggered.connect(self.openSettingsDialog)
         self.ui.actionTietoja_ohjelmasta.triggered.connect(self.openAboutDialog)
+
+        # Välilehtien vaihdot päivittävät comboxit
+        self.ui.tabWidget.currentChanged.connect(self.updateCombox)
 
         # Painikkeet
         self.ui.tallennaRyhmatPushButton.clicked.connect(self.saveGroup)
         self.ui.tallennaLainaajatPushButton.clicked.connect(self.savePerson)
         self.ui.tallennaAutotPushButton.clicked.connect(self.saveCar)
+        
 
-    # Ohjelmoidut Slotit
+    # OHJELMOIDUT SLOTIT
 
     # Valikkotoimintojen slotit
 
@@ -62,7 +73,60 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.aboutDialog.setWindowTitle('Tietoja ohjelmasta')
         self.aboutDialog.exec()
 
+    # Yleinen käyttöliittymän verestys (refresh)
+    def refreshUi(self):
+        self.updateCombox()
+        self.updateLainaajaTableWidget()
+        self.updateAutoTableWidget()
+        self.updateGroupTableWidget()
+
     # PAINIKKEIDEN SLOTIT
+    
+    # Ryhmän valinta -ruudun arvojen päivitys
+    def updateCombox(self):
+        dbSettings = self.currentSettings
+        dbConnection = dbOperations.DbConnection(dbSettings)
+        
+        # Tehdään lista lainaaja
+        groupList = dbConnection.readChosenColumnFormTable('ryhma', 'ryhma')
+        simpleList = []
+        for tuple in groupList:
+            simpleList.append(tuple[0])
+        self.ui.ryhmaComboBox.clear()
+        self.ui.ryhmaComboBox.addItems(simpleList)
+        
+    # Lainaajat-taulukon päivitys
+    def updateLainaajaTableWidget(self):
+        dbSettings = self.currentSettings
+        dbConnection = dbOperations.DbConnection(dbSettings)
+        tableData = dbConnection.readAllColumnsFromTable('lainaaja')
+        print('Lainaajataulun tiedot:', tableData)
+        headerRow = ['Henkilötunnus', 'Etunimi', 'Sukunimi', 'Ryhmä', 'Ajokortti', 'Sähköposti']
+        self.ui.lainaajatTableWidget.setHorizontalHeaderLabels(headerRow)
+        for row in range(len(tableData)): # Luetaan listaa riveittäin
+            for column in range(len(tableData[row])): # Luetaan monikkoa sarakkeittain
+            # Muutetaan merkkijonoksi ja QTableWidgetItem-olioksi
+                data = QtWidgets.QTableWidgetItem(str(tableData[row][column]))
+                self.ui.lainaajatTableWidget.setItem(row, column, data)
+    
+    # Autot-taulukon päivitys
+    def updateAutoTableWidget(self):
+        dbSettings = self.currentSettings
+        dbConnection = dbOperations.DbConnection(dbSettings)
+        tableData = dbConnection.readAllColumnsFromTable('auto')
+        print('Autotaulun tiedot:', tableData)
+        headerRow = ['Rekisterinumero', 'Malli', 'Merkki', 'Vuosimalli', 'Henkilömäärä']
+        self.ui.autoluetteloTableWidget.setHorizontalHeaderLabels(headerRow)
+
+    # Ryhmät-taulukon päivitys
+    def updateGroupTableWidget(self):
+        dbSettings = self.currentSettings
+        dbConnection = dbOperations.DbConnection(dbSettings)
+        tableData = dbConnection.readAllColumnsFromTable('ryhma')
+        print('Ryhmataulun tiedot:', tableData)
+        headerRow = ['ryhma', 'vastuuhenkilo']
+        self.ui.ryhmatTableWidget.setHorizontalHeaderLabels(headerRow)
+
     # Ryhmän tallennus
 
     def saveCar(self):
@@ -106,7 +170,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
             'hetu': hetu,
             'etunimi': etunimi,
             'sukunimi': sukunimi,
-            'ryhma': 'Mopo Jopoli',
+            'ryhma': 'Mopo Jopo',
             'ajokorttiluokka': ajokortti,
             'sahkoposti': sahkoposti
         }
@@ -115,6 +179,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 
         try:
             dbConnection.addToTable(tableName, groupDictionary)
+            # self.updateLainaajaTableWidget()
         except Exception as e:
             print('Virheilmoitus', str(e))
             self.openWarning('Virhe!', f'Toiminto keskeytyi! {e}')
