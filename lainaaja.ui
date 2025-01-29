@@ -50,13 +50,13 @@
      <string>Palauta</string>
     </property>
    </widget>
-   <widget class="QLabel" name="label">
+   <widget class="QLabel" name="hetuLabel">
     <property name="geometry">
      <rect>
       <x>150</x>
       <y>270</y>
       <width>150</width>
-      <height>16</height>
+      <height>25</height>
      </rect>
     </property>
     <property name="font">
@@ -68,7 +68,7 @@
      <string>Henkilötunnus</string>
     </property>
    </widget>
-   <widget class="QLabel" name="label_2">
+   <widget class="QLabel" name="rekisteriNrLabel">
     <property name="geometry">
      <rect>
       <x>460</x>
@@ -122,6 +122,24 @@
      <string>Lue avaimen viivakoodi</string>
     </property>
    </widget>
+   <widget class="QLabel" name="tilaLabel">
+    <property name="geometry">
+     <rect>
+      <x>150</x>
+      <y>20</y>
+      <width>150</width>
+      <height>25</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>14</pointsize>
+     </font>
+    </property>
+    <property name="text">
+     <string>Tila</string>
+    </property>
+   </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
@@ -140,7 +158,7 @@
   <connection>
    <sender>ajokorttiLineEdit</sender>
    <signal>textEdited(QString)</signal>
-   <receiver>label</receiver>
+   <receiver>hetuLabel</receiver>
    <slot>setText(QString)</slot>
    <hints>
     <hint type="sourcelabel">
@@ -156,7 +174,7 @@
   <connection>
    <sender>avainLineEdit</sender>
    <signal>textEdited(QString)</signal>
-   <receiver>label_2</receiver>
+   <receiver>rekisteriNrLabel</receiver>
    <slot>setText(QString)</slot>
    <hints>
     <hint type="sourcelabel">
