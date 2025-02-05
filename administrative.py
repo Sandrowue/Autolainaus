@@ -237,6 +237,8 @@ class SaveSettingsDialog(QtWidgets.QDialog, Settings_Dialog):
             
             self.ui.vaihdaSalasanapushButton.setEnabled(False)
             self.ui.tallennaPushButton.clicked.connect(self.saveUserToJsonFile)
+
+            # if self.ui.vanhaSalasanaLineEdit.text() == self.currentSettings['password']:
             self.ui.uusiSalasanaLineEdit.textEdited.connect(self.enableVaihdaSalasana)
             self.ui.vaihdaSalasanapushButton.clicked.connect(self.savePasswordToJsonFile)
         
@@ -245,8 +247,9 @@ class SaveSettingsDialog(QtWidgets.QDialog, Settings_Dialog):
             
             self.ui.tallennaPushButton.clicked.connect(self.saveAllToJsonFile)
 
-            self.ui.vanhaSalasanaLineEdit.setEnabled(False)
-            self.ui.vaihdaSalasanapushButton.setEnabled(False)
+            self.ui.vanhaSalasanaLineEdit.hide()
+            self.ui.vaihdaSalasanapushButton.hide()
+            self.ui.vanhaSalasanaLabel.hide()
 
     def enableVaihdaSalasana(self):
         if self.ui.vanhaSalasanaLineEdit.text() == self.currentSettings['password']:
@@ -339,8 +342,9 @@ class SaveSettingsDialog(QtWidgets.QDialog, Settings_Dialog):
         jsonData = json.dumps(settingsDictionary)
 
         # Avataan asetustiedosto ja korjataan asetukset
-        with open('settings.json', 'wt') as settingsFile:
-            settingsFile.write(jsonData)               
+        if self.ui.vanhaSalasanaLineEdit.text() == actualSettings['password']:
+            with open('settings.json', 'wt') as settingsFile:
+                settingsFile.write(jsonData)               
 
     # Avataan Message Box
     def openInfo(self):
