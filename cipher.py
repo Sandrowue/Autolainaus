@@ -31,5 +31,21 @@ def decryptString(cryptoText: str | bytes, key=b'N4c4aAnEyqjpvIzXD9wZ7doo5V6WOUG
     return plainText
 
 if __name__ == "__main__":
+
     secretKey = newKey()
     print(secretKey)
+
+    secretChipher = createChipher(secretKey)
+    print(secretChipher)
+
+    newEncrypt = encrypt(secretChipher, b'Karhu')
+    print(newEncrypt)
+
+    newDecrypt = decrypt(secretChipher, newEncrypt)
+    print(newDecrypt)
+
+    encryptReady = encryptString('Papukaija')
+    print(encryptReady)
+
+    decryptReady = decryptString(encryptReady)
+    print(decryptReady)
