@@ -1,6 +1,0 @@
-Tietokanta-asetukset
-Palevelin: 127.0.0.1
-Portti: 5432
-Käyttäjätunnus: Sandrowue
-Salasana: helenium
-Tietokanta: Autolainaus

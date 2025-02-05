@@ -1,2 +1,0 @@
-Alustetaan uudet tietokanta asetukset
-Palevelin: 127.0.0.2
