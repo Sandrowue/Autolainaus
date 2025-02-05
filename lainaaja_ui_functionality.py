@@ -19,25 +19,56 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.ui.hetuLabel.hide()
         self.ui.avainLineEdit.hide()
         self.ui.rekisteriNrLabel.hide()
-        self.ui.tilaLabel.hide()
+        self.ui.naytaTiedotPushButton.hide()
+        self.ui.tilaLabel.setText('VALITSE TOIMINTO')
 
         # OHJELMOIDUT SIGNAALIT
 
         # Kun Tulosta-painiketta on klikattu, kutsutaan updatePrintedLabel metodi
 
-        self.ui.lainaaPushButton.clicked.connect(self.activateLender)
+        self.ui.lainaaPushButton.clicked.connect(self.activateLend)
+        self.ui.ajokorttiLineEdit.returnPressed.connect(self.activateAvain)
+        self.ui.avainLineEdit.returnPressed.connect(self.tilaValmis)
+        self.ui.palautaPushButton.clicked.connect(self.activateReturn)
+        self.ui.naytaTiedotPushButton.clicked.connect(self.tiedot)
 
         # OHJELMOIDUT SLOTIT
 
-    def activateLender(self):
-        self.ui.tilaLabel.show()
+    def activateLend(self):
         self.ui.tilaLabel.setText('AUTON LAINAUS')
         self.ui.ajokorttiLineEdit.show()
         self.ui.ajokorttiLineEdit.setFocus()
-        self.ui.hetuLabel.show()
+        self.ui.hetuLabel.hide()
         self.ui.statusbar.showMessage('Skannaa ajokortin!')
         self.ui.palautaPushButton.hide()
+        self.ui.lainaaPushButton.hide()
         
+
+    def activateAvain(self):
+        self.ui.ajokorttiLineEdit.hide()
+        self.ui.hetuLabel.hide()
+        self.ui.avainLineEdit.show()
+        self.ui.avainLineEdit.setFocus()
+        self.ui.rekisteriNrLabel.hide()
+
+    def tilaValmis(self):
+        self.ui.avainLineEdit.hide()
+        self.ui.rekisteriNrLabel.hide()
+        self.ui.naytaTiedotPushButton.show()
+        self.ui.tilaLabel.setText('VALMIS')
+
+    def activateReturn(self):
+        self.ui.tilaLabel.setText('AUTON PALAUTUS')
+        self.ui.avainLineEdit.show()
+        self.ui.avainLineEdit.setFocus()
+        self.ui.rekisteriNrLabel.show()
+        self.ui.lainaaPushButton.hide()
+        self.ui.palautaPushButton.hide()
+
+    def tiedot(self):
+        self.ui.hetuLabel.show() 
+        self.ui.rekisteriNrLabel.show()
+        self.ui.naytaTiedotPushButton.hide()
 # LUODAAN VARSINAINEN SOVELLUS
 
 app = QtWidgets.QApplication(sys.argv)
