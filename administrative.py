@@ -162,7 +162,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         hetu = self.ui.henkilotunnusLineEdit.text()
         etunimi = self.ui.etunimiLineEdit.text()
         sukunimi = self.ui.sukunimiLineEdit.text()
-        # ryhma = self.ui.ryhmaComboBox.currentText()
+        ryhma = self.ui.ryhmaComboBox.currentText()
         ajokortti = self.ui.ajoneuvoluokkaLineEdit.text()
         sahkoposti = self.ui.sahkopostiLineEdit.text()
 
@@ -170,16 +170,17 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
             'hetu': hetu,
             'etunimi': etunimi,
             'sukunimi': sukunimi,
-            'ryhma': 'Mopo Jopo',
+            'ryhma': ryhma,
             'ajokorttiluokka': ajokortti,
             'sahkoposti': sahkoposti
         }
 
         dbConnection = dbOperations.DbConnection(dbSettings)
+        
 
         try:
             dbConnection.addToTable(tableName, groupDictionary)
-            # self.updateLainaajaTableWidget()
+            self.updateLainaajaTableWidget()
         except Exception as e:
             print('Virheilmoitus', str(e))
             self.openWarning('Virhe!', f'Toiminto keskeytyi! {e}')
@@ -366,7 +367,7 @@ class AboutWindow(QtWidgets.QDialog, About_Dialog):
 if __name__ == "__main__":
     # Luodaan sovellus ja setetaan tyyliksi Fusion
     app = QtWidgets.QApplication(sys.argv)
-    app.setStyle('fosion')
+    app.setStyle('fusion')
 
     # Luodaan objekti pääikkunalle ja tehdään siitä näkyvä
     window = MainWindow()
