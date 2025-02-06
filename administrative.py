@@ -117,6 +117,10 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         print('Autotaulun tiedot:', tableData)
         headerRow = ['Rekisterinumero', 'Malli', 'Merkki', 'Vuosimalli', 'Henkilömäärä']
         self.ui.autoluetteloTableWidget.setHorizontalHeaderLabels(headerRow)
+        for row in range(len(tableData)):
+            for column in range(len(tableData[row])):
+                data = QtWidgets.QTableWidgetItem(str(tableData[row][column]))
+                self.ui.autoluetteloTableWidget.setItem(row, column, data)
 
     # Ryhmät-taulukon päivitys
     def updateGroupTableWidget(self):
@@ -126,9 +130,11 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         print('Ryhmataulun tiedot:', tableData)
         headerRow = ['ryhma', 'vastuuhenkilo']
         self.ui.ryhmatTableWidget.setHorizontalHeaderLabels(headerRow)
-
-    # Ryhmän tallennus
-
+        for row in range(len(tableData)):
+            for column in range(len(tableData[row])):
+                data = QtWidgets.QTableWidgetItem(str(tableData[row][column]))
+                self.ui.ryhmatTableWidget.setItem(row, column, data)
+        
     def saveCar(self):
         dbSettings = self.currentSettings
         tableName = 'auto'
@@ -151,6 +157,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 
         try:
             dbConnection.addToTable(tableName, groupDictionary)
+            self.updateAutoTableWidget()
         except Exception as e:
             print('Virheilmoitus', str(e))
             self.openWarning('Virhe!', f'Toiminto keskeytyi! {e}')
@@ -203,6 +210,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         # Kutsutaan tallennusmetodia
         try:
             dbConnection.addToTable(tableName, groupDictionary)
+            self.updateGroupTableWidget()
         except Exception as e:
             print('Virheilmoitus', str(e))
             self.openWarning('Virhe!', f'Toiminto keskeytyi! {e}')
