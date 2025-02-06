@@ -92,10 +92,6 @@ class Ui_MainWindow(object):
         self.tallennaLainaajatPushButton.setObjectName(u"tallennaLainaajatPushButton")
         self.tallennaLainaajatPushButton.setGeometry(QRect(460, 210, 100, 30))
         self.tallennaLainaajatPushButton.setFont(font)
-        self.viivakoodiPushButton = QPushButton(self.lainaajat)
-        self.viivakoodiPushButton.setObjectName(u"viivakoodiPushButton")
-        self.viivakoodiPushButton.setGeometry(QRect(460, 160, 100, 30))
-        self.viivakoodiPushButton.setFont(font)
         self.ryhmaComboBox = QComboBox(self.lainaajat)
         self.ryhmaComboBox.setObjectName(u"ryhmaComboBox")
         self.ryhmaComboBox.setGeometry(QRect(200, 160, 150, 25))
@@ -166,6 +162,10 @@ class Ui_MainWindow(object):
         self.tallennaAutotPushButton.setObjectName(u"tallennaAutotPushButton")
         self.tallennaAutotPushButton.setGeometry(QRect(460, 220, 100, 30))
         self.tallennaAutotPushButton.setFont(font)
+        self.viivakoodiPushButton = QPushButton(self.autot)
+        self.viivakoodiPushButton.setObjectName(u"viivakoodiPushButton")
+        self.viivakoodiPushButton.setGeometry(QRect(460, 170, 100, 30))
+        self.viivakoodiPushButton.setFont(font)
         self.tabWidget.addTab(self.autot, "")
         self.ryhmat = QWidget()
         self.ryhmat.setObjectName(u"ryhmat")
@@ -258,7 +258,7 @@ class Ui_MainWindow(object):
 
         self.retranslateUi(MainWindow)
 
-        self.tabWidget.setCurrentIndex(2)
+        self.tabWidget.setCurrentIndex(1)
 
 
         QMetaObject.connectSlotsByName(MainWindow)
@@ -278,7 +278,6 @@ class Ui_MainWindow(object):
         self.ajoneuvoluokkaLabel.setText(QCoreApplication.translate("MainWindow", u"Ajoneuvoluokka", None))
         self.lainaajatLabel.setText(QCoreApplication.translate("MainWindow", u"Rekister\u00f6idyt lainaajat", None))
         self.tallennaLainaajatPushButton.setText(QCoreApplication.translate("MainWindow", u"Tallenna", None))
-        self.viivakoodiPushButton.setText(QCoreApplication.translate("MainWindow", u"Viivakoodi", None))
         self.sahkopostiLabel.setText(QCoreApplication.translate("MainWindow", u"S\u00e4hk\u00f6posti", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.lainaajat), QCoreApplication.translate("MainWindow", u"Lainaajat", None))
         self.merkkiLabel.setText(QCoreApplication.translate("MainWindow", u"Merkki", None))
@@ -288,6 +287,7 @@ class Ui_MainWindow(object):
         self.henkilomaaraLabel.setText(QCoreApplication.translate("MainWindow", u"Henkil\u00f6m\u00e4\u00e4r\u00e4", None))
         self.autoluetteloLabel.setText(QCoreApplication.translate("MainWindow", u"Autoluettelo", None))
         self.tallennaAutotPushButton.setText(QCoreApplication.translate("MainWindow", u"Tallenna", None))
+        self.viivakoodiPushButton.setText(QCoreApplication.translate("MainWindow", u"Viivakoodi", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.autot), QCoreApplication.translate("MainWindow", u"Autot", None))
         self.ryhmaLabel_2.setText(QCoreApplication.translate("MainWindow", u"Ryhm\u00e4n nimi", None))
         self.vastuuhenkiloLabel.setText(QCoreApplication.translate("MainWindow", u"Vastuuhenkil\u00f6", None))

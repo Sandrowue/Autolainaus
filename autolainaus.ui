@@ -24,7 +24,7 @@
      </rect>
     </property>
     <property name="currentIndex">
-     <number>2</number>
+     <number>1</number>
     </property>
     <widget class="QWidget" name="lainaajat">
      <attribute name="title">
@@ -243,24 +243,6 @@
       </property>
       <property name="text">
        <string>Tallenna</string>
-      </property>
-     </widget>
-     <widget class="QPushButton" name="viivakoodiPushButton">
-      <property name="geometry">
-       <rect>
-        <x>460</x>
-        <y>160</y>
-        <width>100</width>
-        <height>30</height>
-       </rect>
-      </property>
-      <property name="font">
-       <font>
-        <pointsize>14</pointsize>
-       </font>
-      </property>
-      <property name="text">
-       <string>Viivakoodi</string>
       </property>
      </widget>
      <widget class="QComboBox" name="ryhmaComboBox">
@@ -534,6 +516,24 @@
       </property>
       <property name="text">
        <string>Tallenna</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="viivakoodiPushButton">
+      <property name="geometry">
+       <rect>
+        <x>460</x>
+        <y>170</y>
+        <width>100</width>
+        <height>30</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>14</pointsize>
+       </font>
+      </property>
+      <property name="text">
+       <string>Viivakoodi</string>
       </property>
      </widget>
     </widget>
