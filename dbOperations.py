@@ -16,7 +16,7 @@ class DbConnection():
         self.password = settings['password']
         
         # Yhteysmerkkijono
-        self.connectionString = f'dbname={self.databaseName} user={self.userName} password={self.password} host={self.server} port={self.port}'
+        self.connectionString = f'dbname={self.databaseName} user={self.userName} password={cipher.decryptString(self.password)} host={self.server} port={self.port}'
         
 
     # Metodi tietojen lisäämiseen (INSERT)

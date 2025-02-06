@@ -252,7 +252,7 @@ class SaveSettingsDialog(QtWidgets.QDialog, Settings_Dialog):
             self.ui.vanhaSalasanaLabel.hide()
 
     def enableVaihdaSalasana(self):
-        if self.ui.vanhaSalasanaLineEdit.text() == self.currentSettings['password']:
+        if self.ui.vanhaSalasanaLineEdit.text() == cipher.decryptString(self.currentSettings['password']):
             self.ui.vaihdaSalasanapushButton.setEnabled(True)
 
     def saveAllToJsonFile(self):
@@ -273,7 +273,7 @@ class SaveSettingsDialog(QtWidgets.QDialog, Settings_Dialog):
             'port': port,
             'database': database,
             'userName': userName,
-            'password': newPassword
+            'password': encryptedPassword
         }
 
         # Muunnetaan sanakirja JSON-muotoon
@@ -335,14 +335,14 @@ class SaveSettingsDialog(QtWidgets.QDialog, Settings_Dialog):
             'port': actualSettings['port'],
             'database': actualSettings['database'],
             'userName': actualSettings['userName'],
-            'password': newPassword
+            'password': encryptedPassword
         }
 
         # Muunnetaan sanakirja JSON-muotoon
         jsonData = json.dumps(settingsDictionary)
 
         # Avataan asetustiedosto ja korjataan asetukset
-        if self.ui.vanhaSalasanaLineEdit.text() == actualSettings['password']:
+        if self.ui.vanhaSalasanaLineEdit.text() == cipher.decryptString(actualSettings['password']):
             with open('settings.json', 'wt') as settingsFile:
                 settingsFile.write(jsonData)               
 
