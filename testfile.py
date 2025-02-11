@@ -1,4 +1,5 @@
 import json
+import datetime
 
 with open('settings.json', 'rt') as settingsFile:
             jsonData = settingsFile.read()
@@ -6,3 +7,4 @@ with open('settings.json', 'rt') as settingsFile:
             passwordSetting = settingsDictionary['password'] 
 
 print(passwordSetting)
+print(datetime.datetime.now())
