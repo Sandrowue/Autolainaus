@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>992</width>
+    <width>990</width>
     <height>756</height>
    </rect>
   </property>
@@ -71,7 +71,7 @@
    <widget class="QLabel" name="rekisteriNrLabel">
     <property name="geometry">
      <rect>
-      <x>460</x>
+      <x>470</x>
       <y>290</y>
       <width>150</width>
       <height>25</height>
@@ -158,14 +158,86 @@
      <string>Näytä tiedot</string>
     </property>
    </widget>
+   <widget class="QPushButton" name="okPushButton">
+    <property name="geometry">
+     <rect>
+      <x>320</x>
+      <y>250</y>
+      <width>75</width>
+      <height>30</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>14</pointsize>
+     </font>
+    </property>
+    <property name="text">
+     <string>OK</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="alkuunPushButton">
+    <property name="geometry">
+     <rect>
+      <x>150</x>
+      <y>400</y>
+      <width>125</width>
+      <height>30</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>14</pointsize>
+     </font>
+    </property>
+    <property name="text">
+     <string>Palaa Alkuun</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="alkuLabel">
+    <property name="geometry">
+     <rect>
+      <x>150</x>
+      <y>340</y>
+      <width>225</width>
+      <height>25</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>14</pointsize>
+     </font>
+    </property>
+    <property name="text">
+     <string>Lainauksen alku</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="paattyminenLabel">
+    <property name="geometry">
+     <rect>
+      <x>470</x>
+      <y>340</y>
+      <width>225</width>
+      <height>25</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>14</pointsize>
+     </font>
+    </property>
+    <property name="text">
+     <string>Lainauksen päättyminen</string>
+    </property>
+   </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>992</width>
-     <height>21</height>
+     <width>990</width>
+     <height>33</height>
     </rect>
    </property>
   </widget>
