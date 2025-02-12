@@ -39,46 +39,60 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 
         self.ui.lainaaPushButton.clicked.connect(self.activateLend)
         self.ui.ajokorttiLineEdit.returnPressed.connect(self.activateAvain)
-        self.ui.avainLineEdit.returnPressed.connect(self.tilaValmis)
+        self.ui.lainausAvainLineEdit.returnPressed.connect(self.lainaaTilaValmis)
+        self.ui.naytaLainausTiedotPushButton.clicked.connect(self.lainausTiedot)
+        self.ui.okLainaaPushButton.clicked.connect(self.saveLendingData)
+        
         self.ui.palautaPushButton.clicked.connect(self.activateReturn)
-        self.ui.naytaTiedotPushButton.clicked.connect(self.tiedot)
+        self.ui.palautusAvainLineEdit.returnPressed.connect(self.palautaTilaValmis)
+        self.ui.naytaPalautusTiedotPushButton.clicked.connect(self.palautusTiedot)
+        
         self.ui.alkuunPushButton.clicked.connect(self.startView)
-        self.ui.okPushButton.clicked.connect(self.saveLendingData)
 
         # OHJELMOIDUT SLOTIT
 
     def setInitialElements(self):
         self.ui.ajokorttiLineEdit.hide()
         self.ui.hetuLabel.hide()
-        self.ui.avainLineEdit.hide()
+        self.ui.lainausAvainLineEdit.hide()
+        self.ui.palautusAvainLineEdit.hide()
         self.ui.rekisteriNrLabel.hide()
-        self.ui.naytaTiedotPushButton.hide()
-        self.ui.okPushButton.hide()
+        self.ui.naytaLainausTiedotPushButton.hide()
+        self.ui.naytaPalautusTiedotPushButton.hide()
+        self.ui.okLainaaPushButton.hide()
         self.ui.alkuunPushButton.hide()
         self.ui.alkuLabel.hide()
         self.ui.paattyminenLabel.hide()
         self.ui.tilaLabel.setText('VALITSE TOIMINTO')
         self.ui.nimiLabel.hide()
         self.ui.autoLabel.hide()
-
+        self.ui.vapaatAutotTableWidget.hide()
+        self.ui.vapaatAutotTitlelabel.hide()
+        self.ui.okPalautaPushButton.hide()
+        
     def startView(self):
         self.ui.lainaaPushButton.show()
         self.ui.palautaPushButton.show()
         self.ui.ajokorttiLineEdit.hide()
         self.ui.ajokorttiLineEdit.setText('')
         self.ui.hetuLabel.hide()
-        self.ui.avainLineEdit.hide()
-        self.ui.avainLineEdit.setText('')
+        self.ui.lainausAvainLineEdit.hide()
+        self.ui.lainausAvainLineEdit.setText('')
+        self.ui.palautusAvainLineEdit.setText('')
         self.ui.rekisteriNrLabel.setText('')
         self.ui.rekisteriNrLabel.hide()
-        self.ui.naytaTiedotPushButton.hide()
-        self.ui.okPushButton.hide()
+        self.ui.naytaLainausTiedotPushButton.hide()
+        self.ui.naytaPalautusTiedotPushButton.hide()
+        self.ui.okLainaaPushButton.hide()
         self.ui.alkuunPushButton.hide()
         self.ui.alkuLabel.hide()
         self.ui.paattyminenLabel.hide()
         self.ui.tilaLabel.setText('VALITSE TOIMINTO')
         self.ui.nimiLabel.hide()
         self.ui.autoLabel.hide()
+        self.ui.vapaatAutotTableWidget.hide()
+        self.ui.vapaatAutotTitlelabel.hide()
+        self.ui.okPalautaPushButton.hide()
 
     def activateLend(self):
         self.ui.tilaLabel.setText('AUTON LAINAUS') 
@@ -93,35 +107,41 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
     def activateAvain(self):
         self.ui.ajokorttiLineEdit.hide()
         self.ui.hetuLabel.hide()
-        self.ui.avainLineEdit.show()
-        self.ui.avainLineEdit.setFocus()
+        self.ui.lainausAvainLineEdit.show()
+        self.ui.lainausAvainLineEdit.setFocus()
         self.ui.rekisteriNrLabel.hide()
-
-    def tilaValmis(self):
-        self.ui.avainLineEdit.hide()
-        self.ui.rekisteriNrLabel.hide()
-        self.ui.naytaTiedotPushButton.show()
-        self.ui.okPushButton.show()
-        self.ui.tilaLabel.setText('VALMIS')
 
     def activateReturn(self):
         self.ui.tilaLabel.setText('AUTON PALAUTUS')
-        self.ui.avainLineEdit.show()
+        self.ui.palautusAvainLineEdit.show()
         self.ui.alkuunPushButton.show()
-        self.ui.avainLineEdit.setFocus()
+        self.ui.palautusAvainLineEdit.setFocus()
         self.ui.rekisteriNrLabel.show()
         self.ui.lainaaPushButton.hide()
-        self.ui.palautaPushButton.hide()
+        self.ui.palautaPushButton.hide()    
 
-    def tiedot(self):
+    def lainaaTilaValmis(self):
+        self.ui.lainausAvainLineEdit.hide()
+        self.ui.rekisteriNrLabel.hide()
+        self.ui.naytaLainausTiedotPushButton.show()
+        self.ui.okLainaaPushButton.show()
+        self.ui.tilaLabel.setText('VALMIS')
+
+    def palautaTilaValmis(self):
+        self.ui.palautusAvainLineEdit.hide()
+        self.ui.rekisteriNrLabel.hide()
+        self.ui.naytaPalautusTiedotPushButton.show()
+        self.ui.okPalautaPushButton.show()
+        self.ui.tilaLabel.setText('VALMIS')
+
+    def lainausTiedot(self):
         self.ui.hetuLabel.show() 
         self.ui.rekisteriNrLabel.show()
         self.ui.alkuLabel.show()
         self.ui.alkuLabel.setText(str(datetime.datetime.now().strftime("%Y-%m-%d %H:%M")))
         self.ui.nimiLabel.show()
         self.ui.autoLabel.show()
-        self.ui.paattyminenLabel.show()
-        self.ui.naytaTiedotPushButton.hide()
+        self.ui.naytaLainausTiedotPushButton.hide()
 
         dbSettings = self.currentSettings
         plainTextPassword = self.plainTextPassword
@@ -153,6 +173,19 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
             text = 'Auton Rekisterinumero ei löytynyt tietokannasta! Ota yhteyttä hekilökuntaan.'
             detailedText = str(e)
             self.openWarning(title, text, detailedText)
+
+    def palautusTiedot(self):
+        self.ui.hetuLabel.show() 
+        self.ui.hetuLabel.setText('huuhaaa')
+        self.ui.rekisteriNrLabel.show()
+        self.ui.rekisteriNrLabel.setText('Hallo')
+        self.ui.alkuLabel.show()
+        self.ui.alkuLabel.setText('hii')
+        self.ui.paattyminenLabel.show()
+        self.ui.paattyminenLabel.setText(str(datetime.datetime.now().strftime("%Y-%m-%d %H:%M")))
+        self.ui.nimiLabel.show()
+        self.ui.autoLabel.show()
+        self.ui.naytaPalautusTiedotPushButton.hide()
 
     def saveLendingData(self):
         dbSettings = self.currentSettings
