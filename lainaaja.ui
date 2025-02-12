@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>990</width>
+    <width>995</width>
     <height>756</height>
    </rect>
   </property>
@@ -180,7 +180,7 @@
     <property name="geometry">
      <rect>
       <x>150</x>
-      <y>400</y>
+      <y>440</y>
       <width>125</width>
       <height>30</height>
      </rect>
@@ -230,14 +230,50 @@
      <string>Lainauksen päättyminen</string>
     </property>
    </widget>
+   <widget class="QLabel" name="nimiLabel">
+    <property name="geometry">
+     <rect>
+      <x>150</x>
+      <y>390</y>
+      <width>225</width>
+      <height>25</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>14</pointsize>
+     </font>
+    </property>
+    <property name="text">
+     <string>Lainaajan Nimi</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="autoLabel">
+    <property name="geometry">
+     <rect>
+      <x>470</x>
+      <y>390</y>
+      <width>225</width>
+      <height>25</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>14</pointsize>
+     </font>
+    </property>
+    <property name="text">
+     <string>Auton merkki ja malli </string>
+    </property>
+   </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>990</width>
-     <height>33</height>
+     <width>995</width>
+     <height>21</height>
     </rect>
    </property>
   </widget>

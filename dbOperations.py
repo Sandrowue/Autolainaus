@@ -17,7 +17,7 @@ class DbConnection():
         
         # Yhteysmerkkijono
         self.connectionString = f'dbname={self.databaseName} user={self.userName} password={cipher.decryptString(self.password)} host={self.server} port={self.port}'
-        
+        print(self.connectionString)
 
     # Metodi tietojen lisäämiseen (INSERT)
     def addToTable(self, table: str, data: dict) -> str:
@@ -121,15 +121,20 @@ class DbConnection():
 
 if __name__ == '__main__':
 
-    testiasetukset = {"server": "127.0.0.1", "port": "5432", "database": "autolainaus", "userName": "autolainaus", "password": "helenium"}
+    testiasetukset = {"server": "127.0.0.1", "port": "5432", "database": "autolainaus", "userName": "autolainaus", "password": "gAAAAABnpGftFOtj6nvknyzBYXRw-mdPn9JcLc6jqE5_9639RYTsabBrkH7H9A5FlhqMVCrC2zcSllPX6TIXZXuirj3JVmj-dQ=="}
     dbConnection = DbConnection(testiasetukset)
    
     """ testidata = {'ryhma': 'Mopo Jopo',
                  'vastuuhenkilo': 'Hannu'}
     dbConnection.addToTable('ryhma', testidata) """
 
-    taulukonSisältö = dbConnection.readAllColumnsFromTable('lainaaja')
-    valitutKolumnit = dbConnection.readChosenColumnFormTable('lainaaja', 'sukunimi')
-    print(taulukonSisältö)
-    # print(valitutKolumnit)
+    # taulukonSisältö = dbConnection.readAllColumnsFromTable('lainaaja')
+    valitutKolumnit = dbConnection.readChosenColumnFormTable('lainaaja', 'hetu, sukunimi, etunimi')
+    # print(taulukonSisältö)
+    print(valitutKolumnit)
+    simpleList = []
+    for tuple in valitutKolumnit:
+            simpleList.append(tuple[0])
+    print(simpleList)
+    
 

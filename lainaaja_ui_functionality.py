@@ -58,6 +58,8 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.ui.alkuLabel.hide()
         self.ui.paattyminenLabel.hide()
         self.ui.tilaLabel.setText('VALITSE TOIMINTO')
+        self.ui.nimiLabel.hide()
+        self.ui.autoLabel.hide()
 
     def startView(self):
         self.ui.lainaaPushButton.show()
@@ -67,6 +69,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.ui.hetuLabel.hide()
         self.ui.avainLineEdit.hide()
         self.ui.avainLineEdit.setText('')
+        self.ui.rekisteriNrLabel.setText('')
         self.ui.rekisteriNrLabel.hide()
         self.ui.naytaTiedotPushButton.hide()
         self.ui.okPushButton.hide()
@@ -74,6 +77,8 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.ui.alkuLabel.hide()
         self.ui.paattyminenLabel.hide()
         self.ui.tilaLabel.setText('VALITSE TOIMINTO')
+        self.ui.nimiLabel.hide()
+        self.ui.autoLabel.hide()
 
     def activateLend(self):
         self.ui.tilaLabel.setText('AUTON LAINAUS') 
@@ -113,9 +118,41 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.ui.rekisteriNrLabel.show()
         self.ui.alkuLabel.show()
         self.ui.alkuLabel.setText(str(datetime.datetime.now().strftime("%Y-%m-%d %H:%M")))
-        print(datetime.datetime.now())
+        self.ui.nimiLabel.show()
+        self.ui.autoLabel.show()
         self.ui.paattyminenLabel.show()
         self.ui.naytaTiedotPushButton.hide()
+
+        dbSettings = self.currentSettings
+        plainTextPassword = self.plainTextPassword
+        dbSettings['Password'] = plainTextPassword
+
+        try:
+            dbConnection = dbOperations.DbConnection(dbSettings)
+            valitutKolumnit = dbConnection.readChosenColumnFormTable('lainaaja', 'hetu, etunimi, sukunimi')
+            print(valitutKolumnit)
+            for tuple in valitutKolumnit:
+                print(tuple[1] + ' ' + tuple[2])
+                if tuple[0] == self.ui.hetuLabel.text():
+                    self.ui.nimiLabel.setText(tuple[1] + ' ' + tuple[2])
+        except Exception as e:
+            title = 'Tuntematon Henkilötunnus!'
+            text = 'Lainaajan henkilötunnus ei löytynyt tietokannasta! Ota yhteyttä hekilökuntaan.'
+            detailedText = str(e)
+            self.openWarning(title, text, detailedText)
+
+        try:
+            dbConnection = dbOperations.DbConnection(dbSettings)
+            valitutKolumnit = dbConnection.readChosenColumnFormTable('auto', 'rekisterinumero, merkki, malli')
+            for tuple in valitutKolumnit:
+                print(tuple[1] + ' ' + tuple[2])
+                if tuple[0] == self.ui.rekisteriNrLabel.text():
+                    self.ui.autoLabel.setText(tuple[1] + ' ' + tuple[2])
+        except Exception as e:
+            title = 'Tuntematon Rekisterinumero!'
+            text = 'Auton Rekisterinumero ei löytynyt tietokannasta! Ota yhteyttä hekilökuntaan.'
+            detailedText = str(e)
+            self.openWarning(title, text, detailedText)
 
     def saveLendingData(self):
         dbSettings = self.currentSettings
