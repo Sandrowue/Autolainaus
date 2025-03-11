@@ -82,7 +82,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         dbConnection = dbOperations.DbConnection(dbSettings)
         tableData = dbConnection.readAllColumnsFromTable('lainaaja')
         print('Lainaajataulun tiedot:', tableData)
-        headerRow = ['Henkilötunnus', 'Etunimi', 'Sukunimi', 'Ryhmä', 'Ajokortti', 'Sähköposti']
+        headerRow = ['Henkilötunnus', 'Etunimi', 'Sukunimi', 'Ajokortti', 'Sähköposti']
         self.ui.lainaajatTableWidget.setHorizontalHeaderLabels(headerRow)
         for row in range(len(tableData)): # Luetaan listaa riveittäin
             for column in range(len(tableData[row])): # Luetaan monikkoa sarakkeittain
