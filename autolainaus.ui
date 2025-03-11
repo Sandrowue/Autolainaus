@@ -24,7 +24,7 @@
      </rect>
     </property>
     <property name="currentIndex">
-     <number>1</number>
+     <number>2</number>
     </property>
     <widget class="QWidget" name="lainaajat">
      <attribute name="title">
@@ -534,132 +534,6 @@
       </property>
       <property name="text">
        <string>Viivakoodi</string>
-      </property>
-     </widget>
-    </widget>
-    <widget class="QWidget" name="ryhmat">
-     <attribute name="title">
-      <string>Ryhmät</string>
-     </attribute>
-     <widget class="QLabel" name="ryhmaLabel_2">
-      <property name="geometry">
-       <rect>
-        <x>30</x>
-        <y>30</y>
-        <width>150</width>
-        <height>25</height>
-       </rect>
-      </property>
-      <property name="font">
-       <font>
-        <pointsize>14</pointsize>
-       </font>
-      </property>
-      <property name="text">
-       <string>Ryhmän nimi</string>
-      </property>
-     </widget>
-     <widget class="QLabel" name="vastuuhenkiloLabel">
-      <property name="geometry">
-       <rect>
-        <x>30</x>
-        <y>80</y>
-        <width>150</width>
-        <height>25</height>
-       </rect>
-      </property>
-      <property name="font">
-       <font>
-        <pointsize>14</pointsize>
-       </font>
-      </property>
-      <property name="text">
-       <string>Vastuuhenkilö</string>
-      </property>
-     </widget>
-     <widget class="QLineEdit" name="ryhmaLineEdit_2">
-      <property name="geometry">
-       <rect>
-        <x>210</x>
-        <y>30</y>
-        <width>150</width>
-        <height>25</height>
-       </rect>
-      </property>
-     </widget>
-     <widget class="QLineEdit" name="vastuuhenkiloLineEdit">
-      <property name="geometry">
-       <rect>
-        <x>210</x>
-        <y>80</y>
-        <width>150</width>
-        <height>25</height>
-       </rect>
-      </property>
-     </widget>
-     <widget class="QTableWidget" name="ryhmatTableWidget">
-      <property name="geometry">
-       <rect>
-        <x>30</x>
-        <y>180</y>
-        <width>240</width>
-        <height>350</height>
-       </rect>
-      </property>
-      <property name="rowCount">
-       <number>11</number>
-      </property>
-      <property name="columnCount">
-       <number>2</number>
-      </property>
-      <row/>
-      <row/>
-      <row/>
-      <row/>
-      <row/>
-      <row/>
-      <row/>
-      <row/>
-      <row/>
-      <row/>
-      <row/>
-      <column/>
-      <column/>
-     </widget>
-     <widget class="QLabel" name="ryhmat_label">
-      <property name="geometry">
-       <rect>
-        <x>30</x>
-        <y>150</y>
-        <width>170</width>
-        <height>25</height>
-       </rect>
-      </property>
-      <property name="font">
-       <font>
-        <pointsize>14</pointsize>
-       </font>
-      </property>
-      <property name="text">
-       <string>Tallennetut ryhmät</string>
-      </property>
-     </widget>
-     <widget class="QPushButton" name="tallennaRyhmatPushButton">
-      <property name="geometry">
-       <rect>
-        <x>450</x>
-        <y>80</y>
-        <width>100</width>
-        <height>30</height>
-       </rect>
-      </property>
-      <property name="font">
-       <font>
-        <pointsize>14</pointsize>
-       </font>
-      </property>
-      <property name="text">
-       <string>Tallenna</string>
       </property>
      </widget>
     </widget>

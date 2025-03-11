@@ -49,11 +49,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.ui.actionMuokkaa.triggered.connect(self.openSettingsDialog)
         self.ui.actionTietoja_ohjelmasta.triggered.connect(self.openAboutDialog)
 
-        # Välilehtien vaihdot päivittävät comboxit
-        self.ui.tabWidget.currentChanged.connect(self.updateCombox)
-
         # Painikkeet
-        self.ui.tallennaRyhmatPushButton.clicked.connect(self.saveGroup)
         self.ui.tallennaLainaajatPushButton.clicked.connect(self.savePerson)
         self.ui.tallennaAutotPushButton.clicked.connect(self.saveCar)
         
@@ -75,26 +71,11 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 
     # Yleinen käyttöliittymän verestys (refresh)
     def refreshUi(self):
-        self.updateCombox()
         self.updateLainaajaTableWidget()
         self.updateAutoTableWidget()
-        self.updateGroupTableWidget()
 
     # PAINIKKEIDEN SLOTIT
     
-    # Ryhmän valinta -ruudun arvojen päivitys
-    def updateCombox(self):
-        dbSettings = self.currentSettings
-        dbConnection = dbOperations.DbConnection(dbSettings)
-        
-        # Tehdään lista lainaaja
-        groupList = dbConnection.readChosenColumnFormTable('ryhma', 'ryhma')
-        simpleList = []
-        for tuple in groupList:
-            simpleList.append(tuple[0])
-        self.ui.ryhmaComboBox.clear()
-        self.ui.ryhmaComboBox.addItems(simpleList)
-        
     # Lainaajat-taulukon päivitys
     def updateLainaajaTableWidget(self):
         dbSettings = self.currentSettings
@@ -121,19 +102,6 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
             for column in range(len(tableData[row])):
                 data = QtWidgets.QTableWidgetItem(str(tableData[row][column]))
                 self.ui.autoluetteloTableWidget.setItem(row, column, data)
-
-    # Ryhmät-taulukon päivitys
-    def updateGroupTableWidget(self):
-        dbSettings = self.currentSettings
-        dbConnection = dbOperations.DbConnection(dbSettings)
-        tableData = dbConnection.readAllColumnsFromTable('ryhma')
-        print('Ryhmataulun tiedot:', tableData)
-        headerRow = ['ryhma', 'vastuuhenkilo']
-        self.ui.ryhmatTableWidget.setHorizontalHeaderLabels(headerRow)
-        for row in range(len(tableData)):
-            for column in range(len(tableData[row])):
-                data = QtWidgets.QTableWidgetItem(str(tableData[row][column]))
-                self.ui.ryhmatTableWidget.setItem(row, column, data)
         
     def saveCar(self):
         dbSettings = self.currentSettings
@@ -169,7 +137,6 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         hetu = self.ui.henkilotunnusLineEdit.text()
         etunimi = self.ui.etunimiLineEdit.text()
         sukunimi = self.ui.sukunimiLineEdit.text()
-        ryhma = self.ui.ryhmaComboBox.currentText()
         ajokortti = self.ui.ajoneuvoluokkaLineEdit.text()
         sahkoposti = self.ui.sahkopostiLineEdit.text()
 
@@ -177,7 +144,6 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
             'hetu': hetu,
             'etunimi': etunimi,
             'sukunimi': sukunimi,
-            'ryhma': ryhma,
             'ajokorttiluokka': ajokortti,
             'sahkoposti': sahkoposti
         }
@@ -188,29 +154,6 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         try:
             dbConnection.addToTable(tableName, groupDictionary)
             self.updateLainaajaTableWidget()
-        except Exception as e:
-            print('Virheilmoitus', str(e))
-            self.openWarning('Virhe!', f'Toiminto keskeytyi! {e}')
-
-    def saveGroup(self):
-        # Määritellään tietokanta-asetukset
-        dbSettings = self.currentSettings
-        print('Tiedokannan asetukset on:', dbSettings)
-        # Määritellään tallennusmetodin vaatimat parametrit
-        tableName = 'ryhma'
-
-        group = self.ui.ryhmaLineEdit_2.text()
-        responsiblePerson = self.ui.vastuuhenkiloLineEdit.text()
-        groupDictionary  = {'ryhma': group,
-                            'vastuuhenkilo': responsiblePerson}
-        
-        # Luodaan tietokantayhteys-olio
-        dbConnection = dbOperations.DbConnection(dbSettings)
-
-        # Kutsutaan tallennusmetodia
-        try:
-            dbConnection.addToTable(tableName, groupDictionary)
-            self.updateGroupTableWidget()
         except Exception as e:
             print('Virheilmoitus', str(e))
             self.openWarning('Virhe!', f'Toiminto keskeytyi! {e}')
