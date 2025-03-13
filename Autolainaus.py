@@ -86,7 +86,7 @@ class Ui_MainWindow(object):
         self.lainaajatTableWidget.setColumnCount(5)
         self.tallennaLainaajatPushButton = QPushButton(self.lainaajat)
         self.tallennaLainaajatPushButton.setObjectName(u"tallennaLainaajatPushButton")
-        self.tallennaLainaajatPushButton.setGeometry(QRect(460, 200, 100, 30))
+        self.tallennaLainaajatPushButton.setGeometry(QRect(460, 210, 100, 30))
         self.tallennaLainaajatPushButton.setFont(font)
         self.sahkopostiLineEdit = QLineEdit(self.lainaajat)
         self.sahkopostiLineEdit.setObjectName(u"sahkopostiLineEdit")
@@ -231,7 +231,7 @@ class Ui_MainWindow(object):
 
         self.retranslateUi(MainWindow)
 
-        self.tabWidget.setCurrentIndex(1)
+        self.tabWidget.setCurrentIndex(0)
 
 
         QMetaObject.connectSlotsByName(MainWindow)
