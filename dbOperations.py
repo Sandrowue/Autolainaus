@@ -17,7 +17,6 @@ class DbConnection():
         
         # Yhteysmerkkijono
         self.connectionString = f'dbname={self.databaseName} user={self.userName} password={cipher.decryptString(self.password)} host={self.server} port={self.port}'
-        print(self.connectionString)
 
     # Metodi tietojen lisäämiseen (INSERT)
     def addToTable(self, table: str, data: dict) -> str:
@@ -51,7 +50,6 @@ class DbConnection():
             values = values[:-2]
 
             sqlClause = f'INSERT INTO {table} ({columns}) VALUES ({values})'
-            print(sqlClause)
             # Suoritetaan SQL-lause
             cursor.execute(sqlClause)
 
@@ -131,10 +129,10 @@ if __name__ == '__main__':
     # taulukonSisältö = dbConnection.readAllColumnsFromTable('lainaaja')
     valitutKolumnit = dbConnection.readChosenColumnFormTable('lainaaja', 'hetu, sukunimi, etunimi')
     # print(taulukonSisältö)
-    print(valitutKolumnit)
+    # print(valitutKolumnit)
     simpleList = []
     for tuple in valitutKolumnit:
             simpleList.append(tuple[0])
-    print(simpleList)
+    # print(simpleList)
     
 

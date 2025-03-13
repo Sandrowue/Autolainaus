@@ -33,19 +33,19 @@ def decryptString(cryptoText: str | bytes, key=b'N4c4aAnEyqjpvIzXD9wZ7doo5V6WOUG
 if __name__ == "__main__":
 
     secretKey = newKey()
-    print(secretKey)
+    # print(secretKey)
 
     secretChipher = createChipher(secretKey)
-    print(secretChipher)
+    # print(secretChipher)
 
     newEncrypt = encrypt(secretChipher, b'Karhu')
-    print(newEncrypt)
+    # print(newEncrypt)
 
     newDecrypt = decrypt(secretChipher, newEncrypt)
-    print(newDecrypt)
+    # print(newDecrypt)
 
     encryptReady = encryptString('Papukaija')
-    print(encryptReady)
+    # print(encryptReady)
 
     decryptReady = decryptString(encryptReady)
-    print(decryptReady)
+    # print(decryptReady)
