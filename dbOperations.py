@@ -5,6 +5,8 @@ import json
 
 import cipher
 
+import datetime
+
 # Luokat
 class DbConnection():
     def __init__(self, settings: dict):
@@ -116,6 +118,23 @@ class DbConnection():
                 currentConnection.close() # Tuhotaan yhteys
 
         return records
+    
+    def modifyTableData(self, table: str, columnOfChange: str, newValue, lookForColumn, lookForValue):
+        try:
+            cuurrentConnection = psycopg2.connect(self.connectionString)
+            cursor = cuurrentConnection.cursor()
+            sqlClause = f'UPDATE {table} SET {columnOfChange} = {newValue} WHERE {lookForColumn} = {lookForValue}'
+            cursor.execute(sqlClause)
+
+            # Vahvistetaan tapahtuman (transaction)
+            cuurrentConnection.commit()
+        except(Exception, psycopg2.Error) as e:
+            raise e
+        
+        finally:
+            if cuurrentConnection:
+                cursor.close()
+                cuurrentConnection.close()
 
 if __name__ == '__main__':
 
@@ -126,13 +145,16 @@ if __name__ == '__main__':
                  'vastuuhenkilo': 'Hannu'}
     dbConnection.addToTable('ryhma', testidata) """
 
-    # taulukonSisältö = dbConnection.readAllColumnsFromTable('lainaaja')
+    '''taulukonSisältö = dbConnection.readAllColumnsFromTable('lainaaja')
     valitutKolumnit = dbConnection.readChosenColumnFormTable('lainaaja', 'hetu, sukunimi, etunimi')
-    # print(taulukonSisältö)
-    # print(valitutKolumnit)
+    print(taulukonSisältö)
+    print(valitutKolumnit)
     simpleList = []
     for tuple in valitutKolumnit:
             simpleList.append(tuple[0])
-    # print(simpleList)
+    print(simpleList)'''
+  
+    print(f'{datetime.datetime.now()}+02')
+    dbConnection.modifyTableData('lainaus', 'palautus', 'CURRENT_TIMESTAMP', 'rekisterinumero', "'4567UI'")
     
 
