@@ -42,6 +42,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.ui.lainausAvainLineEdit.returnPressed.connect(self.lainaaTilaValmis)
         self.ui.naytaLainausTiedotPushButton.clicked.connect(self.lainausTiedot)
         self.ui.okLainaaPushButton.clicked.connect(self.saveLendingData)
+        self.ui.okPalautaPushButton.clicked.connect(self.saveReturnData)
         
         self.ui.palautaPushButton.clicked.connect(self.activateReturn)
         self.ui.palautusAvainLineEdit.returnPressed.connect(self.palautaTilaValmis)
@@ -208,6 +209,28 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
             detailedText = str(e)
             self.openWarning(title, text, detailedText)
 
+    def saveReturnData(self):
+        dbSettings = self.currentSettings
+        plainTextPassword = self.plainTextPassword
+        dbSettings['Password'] = plainTextPassword
+
+        try:
+            dbConnection = dbOperations.DbConnection(dbSettings)
+            carInLend = f"'{self.ui.rekisteriNrLabel.text()}'"
+            dbConnection.modifyTableData('lainaus', 'palautus', 'CURRENT_TIMESTAMP', 'rekisterinumero', carInLend)
+            self.startView()
+            self.ui.statusbar.showMessage('Auton lainaustiedot tallenettiin', 5000)
+
+
+        except Exception as e:
+            title = 'Palautustietojen tallentaminen ei onnistunut'
+            text = 'Muistitko rekisteröidä ajoneuvon käyttöönoton? Ota yhteyttä hekilökuntaan.'
+            detailedText = str(e)
+            self.openWarning(title, text, detailedText)
+            carInLend = f"'{self.ui.rekisteriNrLabel.text()}'"
+            dbConnection.modifyTableData('lainaus', 'palautus', 'CURRENT_TIMESTAMP', 'rekisterinumero', carInLend)
+        
+
     def openWarning(self, title: str, text: str, detailedText: str) -> None:
         msgBox = QtWidgets.QMessageBox()
         msgBox.setIcon(QtWidgets.QMessageBox.Critical)
@@ -226,5 +249,3 @@ windows.show()
 
 # Käynnistetään sovellus ja tapahtumienkäsittelijä (event loop)
 app.exec()
-
-
