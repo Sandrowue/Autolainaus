@@ -24,7 +24,7 @@
      </rect>
     </property>
     <property name="currentIndex">
-     <number>0</number>
+     <number>1</number>
     </property>
     <widget class="QWidget" name="lainaajat">
      <attribute name="title">
@@ -372,16 +372,16 @@
       <property name="geometry">
        <rect>
         <x>30</x>
-        <y>310</y>
-        <width>530</width>
-        <height>250</height>
+        <y>319</y>
+        <width>730</width>
+        <height>241</height>
        </rect>
       </property>
       <property name="rowCount">
        <number>8</number>
       </property>
       <property name="columnCount">
-       <number>5</number>
+       <number>7</number>
       </property>
       <row/>
       <row/>
@@ -391,6 +391,8 @@
       <row/>
       <row/>
       <row/>
+      <column/>
+      <column/>
       <column/>
       <column/>
       <column/>
@@ -475,7 +477,7 @@
      <widget class="QPushButton" name="tallennaAutotPushButton">
       <property name="geometry">
        <rect>
-        <x>460</x>
+        <x>590</x>
         <y>220</y>
         <width>100</width>
         <height>30</height>
@@ -493,7 +495,7 @@
      <widget class="QPushButton" name="viivakoodiPushButton">
       <property name="geometry">
        <rect>
-        <x>460</x>
+        <x>590</x>
         <y>170</y>
         <width>100</width>
         <height>30</height>
@@ -506,6 +508,62 @@
       </property>
       <property name="text">
        <string>Viivakoodi</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="ajoneuvotyyppiLabel">
+      <property name="geometry">
+       <rect>
+        <x>410</x>
+        <y>20</y>
+        <width>150</width>
+        <height>25</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>14</pointsize>
+       </font>
+      </property>
+      <property name="text">
+       <string>Ajoneuvotyyppi</string>
+      </property>
+     </widget>
+     <widget class="QComboBox" name="ajoneuvotyyppiComboBox">
+      <property name="geometry">
+       <rect>
+        <x>590</x>
+        <y>20</y>
+        <width>150</width>
+        <height>25</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QLabel" name="vaihteistotyyppiLabel">
+      <property name="geometry">
+       <rect>
+        <x>410</x>
+        <y>70</y>
+        <width>150</width>
+        <height>25</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>14</pointsize>
+       </font>
+      </property>
+      <property name="text">
+       <string>Vaihteistotyyppi</string>
+      </property>
+     </widget>
+     <widget class="QComboBox" name="vaihteistotyyppiComboBox">
+      <property name="geometry">
+       <rect>
+        <x>590</x>
+        <y>70</y>
+        <width>150</width>
+        <height>25</height>
+       </rect>
       </property>
      </widget>
     </widget>
