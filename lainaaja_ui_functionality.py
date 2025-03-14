@@ -176,18 +176,32 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
             self.openWarning(title, text, detailedText)
 
     def palautusTiedot(self):
-        self.ui.hetuLabel.show() 
-        self.ui.hetuLabel.setText('huuhaaa')
-        self.ui.rekisteriNrLabel.show()
-        self.ui.rekisteriNrLabel.setText('Hallo')
-        self.ui.alkuLabel.show()
-        self.ui.alkuLabel.setText('hii')
-        self.ui.paattyminenLabel.show()
-        self.ui.paattyminenLabel.setText(str(datetime.datetime.now().strftime("%Y-%m-%d %H:%M")))
-        self.ui.nimiLabel.show()
-        self.ui.autoLabel.show()
-        self.ui.naytaPalautusTiedotPushButton.hide()
+        dbSettings = self.currentSettings
+        plainTextPassword = self.plainTextPassword
+        dbSettings['Password'] = plainTextPassword
+        try:
+            dbConnection = dbOperations.DbConnection(dbSettings)
+            tiedot = dbConnection.filterColumnsFromTable('ajossa', ['hetu', 'lainausaika'], f"rekisterinumero = '{self.ui.rekisteriNrLabel.text()}'")
+            print(self.ui.rekisteriNrLabel.text())
 
+            self.ui.hetuLabel.show() 
+            self.ui.hetuLabel.setText(tiedot[0][0])
+            self.ui.rekisteriNrLabel.show()
+            self.ui.alkuLabel.show()
+            self.ui.alkuLabel.setText([0][1])
+            self.ui.paattyminenLabel.show()
+            self.ui.paattyminenLabel.setText(str(datetime.datetime.now().strftime("%Y-%m-%d %H:%M")))
+            self.ui.nimiLabel.show()
+            self.ui.autoLabel.show()
+            self.ui.naytaPalautusTiedotPushButton.hide()
+
+        except Exception as e:
+            title = 'Lainatun auton tietoja ei löytynyt!'
+            text = 'Muistitkö rekisteröidä ajoneuvon käyttöönoton? Ota yhteyttä hekilökuntaan.'
+            detailedText = str(e)
+            self.openWarning(title, text, detailedText)
+
+        
     def saveLendingData(self):
         dbSettings = self.currentSettings
         plainTextPassword = self.plainTextPassword
