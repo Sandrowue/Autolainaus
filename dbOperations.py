@@ -119,6 +119,31 @@ class DbConnection():
 
         return records
     
+    def filterColumnsFromTable(self, table: str, columns: list, filter: str):
+        try:
+            currentConnection = psycopg2.connect(self.connectionString)
+            cursor = currentConnection.cursor()
+
+            columnString = ''
+            for column in columns:
+                columnString += column + ', '
+
+            cleanedColumnString = columnString[:-2]
+
+            sqlClause = f'SELECT {cleanedColumnString} FROM {table} WHERE {filter};'
+            cursor.execute(sqlClause)
+            records = cursor.fetchall()
+            return records
+        
+        except(Exception, psycopg2.Error) as e:
+            raise e
+        
+        finally:
+            if currentConnection:
+                cursor.close()
+                currentConnection.close()
+
+    
     def modifyTableData(self, table: str, columnOfChange: str, newValue, lookForColumn, lookForValue):
         try:
             cuurrentConnection = psycopg2.connect(self.connectionString)
@@ -152,9 +177,10 @@ if __name__ == '__main__':
     simpleList = []
     for tuple in valitutKolumnit:
             simpleList.append(tuple[0])
-    print(simpleList)'''
+    print(simpleList)
   
     print(f'{datetime.datetime.now()}+02')
-    dbConnection.modifyTableData('lainaus', 'palautus', 'CURRENT_TIMESTAMP', 'rekisterinumero', "'4567UI'")
-    
+    dbConnection.modifyTableData('lainaus', 'palautus', 'CURRENT_TIMESTAMP', 'rekisterinumero', "'4567UI'")'''
 
+    filterData = dbConnection.filterColumnsFromTable('ajossa', ['hetu', 'lainausaika'], "rekisterinumero = '5678OP'")
+    print(filterData[0][0])
