@@ -155,10 +155,6 @@ class Ui_MainWindow(object):
         self.tallennaAutotPushButton.setObjectName(u"tallennaAutotPushButton")
         self.tallennaAutotPushButton.setGeometry(QRect(590, 220, 100, 30))
         self.tallennaAutotPushButton.setFont(font)
-        self.viivakoodiPushButton = QPushButton(self.autot)
-        self.viivakoodiPushButton.setObjectName(u"viivakoodiPushButton")
-        self.viivakoodiPushButton.setGeometry(QRect(590, 170, 100, 30))
-        self.viivakoodiPushButton.setFont(font)
         self.ajoneuvotyyppiLabel = QLabel(self.autot)
         self.ajoneuvotyyppiLabel.setObjectName(u"ajoneuvotyyppiLabel")
         self.ajoneuvotyyppiLabel.setGeometry(QRect(410, 20, 150, 25))
@@ -231,7 +227,7 @@ class Ui_MainWindow(object):
 
         self.retranslateUi(MainWindow)
 
-        self.tabWidget.setCurrentIndex(0)
+        self.tabWidget.setCurrentIndex(1)
 
 
         QMetaObject.connectSlotsByName(MainWindow)
@@ -259,7 +255,6 @@ class Ui_MainWindow(object):
         self.henkilomaaraLabel.setText(QCoreApplication.translate("MainWindow", u"Henkil\u00f6m\u00e4\u00e4r\u00e4", None))
         self.autoluetteloLabel.setText(QCoreApplication.translate("MainWindow", u"Autoluettelo", None))
         self.tallennaAutotPushButton.setText(QCoreApplication.translate("MainWindow", u"Tallenna", None))
-        self.viivakoodiPushButton.setText(QCoreApplication.translate("MainWindow", u"Viivakoodi", None))
         self.ajoneuvotyyppiLabel.setText(QCoreApplication.translate("MainWindow", u"Ajoneuvotyyppi", None))
         self.vaihteistotyyppiLabel.setText(QCoreApplication.translate("MainWindow", u"Vaihteistotyyppi", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.autot), QCoreApplication.translate("MainWindow", u"Autot", None))
