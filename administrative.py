@@ -95,7 +95,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         dbSettings = self.currentSettings
         dbConnection = dbOperations.DbConnection(dbSettings)
         tableData = dbConnection.readAllColumnsFromTable('lainaaja')
-        headerRow = ['Henkilötunnus', 'Etunimi', 'Sukunimi', 'Ajokortti', 'Sähköposti']
+        headerRow = ['Henkilötunnus', 'Sähköposti', 'Ajokortti', 'Etunimi', 'Sukunimi']
         self.ui.lainaajatTableWidget.setHorizontalHeaderLabels(headerRow)
         for row in range(len(tableData)): # Luetaan listaa riveittäin
             for column in range(len(tableData[row])): # Luetaan monikkoa sarakkeittain
@@ -108,7 +108,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         dbSettings = self.currentSettings
         dbConnection = dbOperations.DbConnection(dbSettings)
         tableData = dbConnection.readAllColumnsFromTable('auto')
-        headerRow = ['Rekisterinumero', 'Malli', 'Merkki', 'Vuosimalli', 'Henkilömäärä', 'Ajoneuvotyyppi', 'Vaihteistotyyppi']
+        headerRow = ['Rekisterinumero', 'Merkki', 'Malli', 'Vaihteistotyyppi', 'Vuosimalli', 'Henkilömäärä', 'Ajoneuvotyyppi']
         self.ui.autoluetteloTableWidget.setHorizontalHeaderLabels(headerRow)
         for row in range(len(tableData)):
             for column in range(len(tableData[row])):
@@ -129,8 +129,8 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 
         groupDictionary = {
             'rekisterinumero': rekisterinumero,
-            'malli': malli,
             'merkki': merkki,
+            'malli': malli,
             'vuosimalli': vuosimalli,
             'henkilomaara': henkilomaara,
             'ajoneuvotyyppi': ajoneuvotyyppi,
