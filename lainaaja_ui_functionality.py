@@ -78,6 +78,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.ui.ajokorttiLineEdit.setText('')
         self.ui.hetuLabel.hide()
         self.ui.lainausAvainLineEdit.hide()
+        self.ui.palautusAvainLineEdit.hide()
         self.ui.lainausAvainLineEdit.setText('')
         self.ui.palautusAvainLineEdit.setText('')
         self.ui.rekisteriNrLabel.setText('')
@@ -117,7 +118,6 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.ui.palautusAvainLineEdit.show()
         self.ui.alkuunPushButton.show()
         self.ui.palautusAvainLineEdit.setFocus()
-        self.ui.rekisteriNrLabel.show()
         self.ui.lainaaPushButton.hide()
         self.ui.palautaPushButton.hide()    
 
@@ -147,9 +147,9 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         dbSettings = self.currentSettings
         plainTextPassword = self.plainTextPassword
         dbSettings['Password'] = plainTextPassword
+        dbConnection = dbOperations.DbConnection(dbSettings)
 
         try:
-            dbConnection = dbOperations.DbConnection(dbSettings)
             valitutKolumnit = dbConnection.readChosenColumnFormTable('lainaaja', 'hetu, etunimi, sukunimi')
             print(valitutKolumnit)
             for tuple in valitutKolumnit:
@@ -163,7 +163,6 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
             self.openWarning(title, text, detailedText)
 
         try:
-            dbConnection = dbOperations.DbConnection(dbSettings)
             valitutKolumnit = dbConnection.readChosenColumnFormTable('auto', 'rekisterinumero, merkki, malli')
             for tuple in valitutKolumnit:
                 print(tuple[1] + ' ' + tuple[2])
@@ -176,32 +175,47 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
             self.openWarning(title, text, detailedText)
 
     def palautusTiedot(self):
+        self.ui.hetuLabel.show()       
+        self.ui.rekisteriNrLabel.show()
+        self.ui.alkuLabel.show()      
+        self.ui.paattyminenLabel.show()
+        self.ui.paattyminenLabel.setText(str(datetime.datetime.now().strftime("%Y-%m-%d %H:%M")))
+        self.ui.nimiLabel.show()
+        self.ui.autoLabel.show()
+        self.ui.naytaPalautusTiedotPushButton.hide()
+
         dbSettings = self.currentSettings
         plainTextPassword = self.plainTextPassword
         dbSettings['Password'] = plainTextPassword
+        dbConnection = dbOperations.DbConnection(dbSettings)
         try:
-            dbConnection = dbOperations.DbConnection(dbSettings)
-            tiedot = dbConnection.filterColumnsFromTable('ajossa', ['hetu', 'lainausaika'], f"rekisterinumero = '{self.ui.rekisteriNrLabel.text()}'")
-            print(self.ui.rekisteriNrLabel.text())
-
-            self.ui.hetuLabel.show() 
-            self.ui.hetuLabel.setText(tiedot[0][0])
-            self.ui.rekisteriNrLabel.show()
-            self.ui.alkuLabel.show()
-            self.ui.alkuLabel.setText([0][1])
-            self.ui.paattyminenLabel.show()
-            self.ui.paattyminenLabel.setText(str(datetime.datetime.now().strftime("%Y-%m-%d %H:%M")))
-            self.ui.nimiLabel.show()
-            self.ui.autoLabel.show()
-            self.ui.naytaPalautusTiedotPushButton.hide()
-
+            palautettava = dbConnection.filterColumnsFromTable('ajossa', ['hetu', 'lainausaika'], f"rekisterinumero = '{self.ui.rekisteriNrLabel.text()}'")
+            self.ui.hetuLabel.setText(palautettava[0][0])
+            self.ui.alkuLabel.setText(str(palautettava[0][1])[:16])
         except Exception as e:
+            title = 'Lainastieto ei löytynyt!'
+            text = 'Muistitkö rekisteröidä ajoneuvon käyttöönoton? Ota yhteyttä hekilökuntaan.'
+            detailedText = str(e)
+            self.openWarning(title, text, detailedText)
+
+        try:
+            autoPalautus = dbConnection.filterColumnsFromTable('auto', ['merkki', 'malli'], f"rekisterinumero = '{self.ui.rekisteriNrLabel.text()}'")
+            self.ui.autoLabel.setText(autoPalautus[0][0] + ' ' + autoPalautus[0][1])
+        except:
             title = 'Lainatun auton tietoja ei löytynyt!'
             text = 'Muistitkö rekisteröidä ajoneuvon käyttöönoton? Ota yhteyttä hekilökuntaan.'
             detailedText = str(e)
             self.openWarning(title, text, detailedText)
 
-        
+        try: 
+            nimiPalauttaja = dbConnection.filterColumnsFromTable('lainaaja', ['etunimi', 'sukunimi'], f"hetu = '{self.ui.hetuLabel.text()}'")
+            self.ui.nimiLabel.setText(nimiPalauttaja[0][0] + ' ' + nimiPalauttaja[0][1])
+        except:
+            title = 'Lainatun auton tietoja ei löytynyt!'
+            text = 'Muistitkö rekisteröidä ajoneuvon käyttöönoton? Ota yhteyttä hekilökuntaan.'
+            detailedText = str(e)
+            self.openWarning(title, text, detailedText)
+
     def saveLendingData(self):
         dbSettings = self.currentSettings
         plainTextPassword = self.plainTextPassword
