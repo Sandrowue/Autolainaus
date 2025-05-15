@@ -143,23 +143,82 @@ class DbConnection():
                 cursor.close()
                 currentConnection.close()
 
-    
-    def modifyTableData(self, table: str, columnOfChange: str, newValue, lookForColumn, lookForValue):
+    def getPgTimestamp(self) -> str:
         try:
-            cuurrentConnection = psycopg2.connect(self.connectionString)
-            cursor = cuurrentConnection.cursor()
-            sqlClause = f'UPDATE {table} SET {columnOfChange} = {newValue} WHERE {lookForColumn} = {lookForValue}'
+            currentConnection = psycopg2.connect(self.connectionString)
+            cursor = currentConnection.cursor()
+            sqlClause = f'SELECT CURRENT_TIMESTAMP'
             cursor.execute(sqlClause)
-
-            # Vahvistetaan tapahtuman (transaction)
-            cuurrentConnection.commit()
+            records = cursor.fetchall()
+            row = records[0]
+            column = row[0]
+            isoDateTime = f'{column}'
+            return isoDateTime
+        
         except(Exception, psycopg2.Error) as e:
             raise e
         
         finally:
-            if cuurrentConnection:
+            if currentConnection:
                 cursor.close()
-                cuurrentConnection.close()
+                currentConnection.close()
+
+
+    def modifyTableData(self, table: str, columnOfChange: str, newValue, lookFromColumn: str, lookForValue):
+        try:
+            currentConnection = psycopg2.connect(self.connectionString)
+            cursor = currentConnection.cursor()
+            sqlClause = f'UPDATE {table} SET {columnOfChange} = {newValue} WHERE {lookFromColumn} = {lookForValue}'
+            cursor.execute(sqlClause)
+
+            # Vahvistetaan tapahtuman (transaction)
+            currentConnection.commit()
+
+        except(Exception, psycopg2.Error) as e:
+            raise e
+        
+        finally:
+            if currentConnection:
+                cursor.close()
+                currentConnection.close()
+
+
+    def updateBinaryField(self, table: str, column: str, lookFromColumn: str, lookForValue, data):
+        try:
+            currentConnection = psycopg2.connect(self.connectionString)    
+            cursor = currentConnection.cursor()
+            sqlClause = f'UPDATE {table} SET {column} = %s WHERE {lookFromColumn} = {lookForValue}'
+            cursor.execute(sqlClause, (data,))   
+
+            currentConnection.commit()
+        
+        except(Exception, psycopg2.Error) as e:
+            raise e
+        
+        finally:
+            if currentConnection:
+                cursor.close()
+                currentConnection.close()
+            
+
+
+    def deleteRowsFromTable(self, table, lookFromColumn, lookForValue):
+        try:
+            currentConnection = psycopg2.connect(self.connectionString)
+            cursor = currentConnection.cursor()
+            sqlClause = f"DELETE FROM {table} WHERE {lookFromColumn} = '{lookForValue}'"
+            cursor.execute(sqlClause)
+
+            currentConnection.commit()
+        
+        except (Exception, psycopg2.Error) as e:
+            raise e
+        
+        finally:
+            if currentConnection:
+                cursor.close()
+                currentConnection.close()
+
 
 if __name__ == '__main__':
 
@@ -182,5 +241,12 @@ if __name__ == '__main__':
     print(f'{datetime.datetime.now()}+02')
     dbConnection.modifyTableData('lainaus', 'palautus', 'CURRENT_TIMESTAMP', 'rekisterinumero', "'4567UI'")'''
 
-    filterData = dbConnection.filterColumnsFromTable('ajossa', ['hetu', 'lainausaika'], "rekisterinumero = '5678OP'")
+    """ filterData = dbConnection.filterColumnsFromTable('ajossa', ['hetu', 'lainausaika'], "rekisterinumero = 'XSE-778'")
     print(filterData[0][0])
+    print(filterData[0][1]) """
+
+    """ timestampToCheck = dbConnection.getPgTimestamp()
+    print(timestampToCheck) """
+
+    """ rowToDelete = dbConnection.deleteRowsFromTable('ajoneuvotyyppi', 'ajoneuvotyyppi', 'urheiluauto') """
+
